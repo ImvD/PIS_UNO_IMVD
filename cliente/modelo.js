@@ -86,6 +86,10 @@ function Jugador(nick, juego){
         var tmp = this.mano ;
         this.mano=tmp.concat(robadas);
     }
+    this.pasarTurno=function(){
+        var partida = this.obtenerPartida(this.codigoPartida);
+        partida.pasarTurno(this.nick);
+    }
 }
 
 function Partida(codigo,jugador,numJug){
@@ -94,6 +98,7 @@ function Partida(codigo,jugador,numJug){
     this.numJug =numJug;
     this.jugadores={};
     this.mazo = [];
+    this.ordenTurno = {};
 
     //Creamos la fase como Inicial
     this.fase = new Inicial();
@@ -104,6 +109,7 @@ function Partida(codigo,jugador,numJug){
     this.puedeUnirAPartida = function(jugador){
         this.jugadores[jugador.nick] = jugador;
         jugador.codigoPartida = this.codigo;
+        this.ordenTurno.push(jugador.nick);
     }
     
 
@@ -137,6 +143,14 @@ function Partida(codigo,jugador,numJug){
         }    
 
     }
+    this.pasarTurno=function(nickJugador){
+        var nick=this.turno.nick;
+        if(nick=nickJugador){
+            var indice = this.ordenTurno.indexOF(nick);
+            var siguiente=(indice+1)%(Object.keys(this.jugadores).length);
+            this.turno=this.jugadores[this.ordenTurno[siguiente]];
+        }
+    }
     this.asignarUnacarta=function(){
         var longitudMazo = this.mazo.length;
                 //Obtienes la longitud del mazo
@@ -151,6 +165,7 @@ function Partida(codigo,jugador,numJug){
         }
         return cartas;
     }
+
 
         //Siempre tiene que ser la última línea
     this.crearMazo();
@@ -217,4 +232,18 @@ function Comodin(valor){
 
 function Comodin4(valor){
     this.valor = valor;    
+}
+
+var juego;
+var j1,j2;
+var partida;
+function Prueba(){
+    juego = new Juego();
+    juego.agregarJugador("Ana")
+    j1 = juego.usuarios["Ana"]
+    j1.crearPartida(2)
+    juego.agregarJugador("Pepe")
+    j2 = juego.usuarios["Pepe"]
+    j2.unirAPartida(j1.codigoPartida)
+    partida = juego.partidas[j1.codigoPartida]
 }

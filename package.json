@@ -1,0 +1,22 @@
+{
+  "name": "pis_uno_imvd",
+  "version": "1.0.0",
+  "description": "Paquete npm del proyecto del UNO",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ImvD/PIS_UNO_IMVD.git"
+  },
+  "keywords": [
+    "juegoDelUno"
+  ],
+  "author": "Ivan Martinez Villanueva Duran",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ImvD/PIS_UNO_IMVD/issues"
+  },
+  "homepage": "https://imvd.github.io/PIS_UNO_IMVD/"
+}

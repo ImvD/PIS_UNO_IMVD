@@ -4,11 +4,16 @@ function Juego(){
     this.partidas={};
 
     this.agregarJugador = function(nick){
+        var res={nick:-1};
         if(!this.usuarios[nick]){
             var jugador = new Jugador(nick,this);            
-            this.usuarios[nick]=jugador;
-        
+            this.usuarios[nick]=jugador;  
+            res={nick:nick};
         }
+        else{
+            console.log("El usuario"+nick+" ya está creado");
+        }
+        return res;
     }
     this.crearPartida = function(nick,numJug){
         var codigo="-1";

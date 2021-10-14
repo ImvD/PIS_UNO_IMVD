@@ -1,22 +1,23 @@
 {
   "name": "pis_uno_imvd",
   "version": "1.0.0",
-  "description": "Paquete npm del proyecto del UNO",
+  "description": "Paquete de módulos del proyecto",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "./node_modules/.bin/jasmine-node servidor"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ImvD/PIS_UNO_IMVD.git"
   },
-  "keywords": [
-    "juegoDelUno"
-  ],
-  "author": "Ivan Martinez Villanueva Duran",
+  "author": "IMVD",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/ImvD/PIS_UNO_IMVD/issues"
   },
-  "homepage": "https://imvd.github.io/PIS_UNO_IMVD/"
+  "homepage": "https://imvd.github.io/PIS_UNO_IMVD/",
+  "dependencies": {
+    "express": "^4.17.1",
+    "jasmine-node": "^3.0.0"
+  }
 }

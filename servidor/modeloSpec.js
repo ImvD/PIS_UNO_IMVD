@@ -12,10 +12,10 @@ describe("El juego del UNO...", function() {
     
     it("Condiciones iniciales", function(){    
       expect(juego.numeroPartidas()).toEqual(0); 
-  
+      expect(juego.obtenerTodasPartidas().length).toEqual(0);
     });
   
-    describe("Ana crea una partida de 1 jugadores..", function() {
+    describe("Ana crea una partida de 2 jugadores..", function() {
       var ju1;
       var partida;
     
@@ -24,10 +24,14 @@ describe("El juego del UNO...", function() {
         ju1 = juego.usuarios["Ana"];   
         partida = ju1.crearPartida(2); 
       });
-  
+    it("Comprobar obtener partida",function(){
+        var codigo=ju1.codigoPartida;
+        expect(ju1.obtenerPartida(codigo)).toBeDefined();
+    });
+    
     it("Comprobar mazo",function(){
-      expect(partida.mazo.length).toBe(112);
-          var rojo=partida.mazo.filter(function(each){
+      expect(partida.mazo.length).toBe(24);
+          /*var rojo=partida.mazo.filter(function(each){
             return each.color=="rojo";
           });
           expect(rojo.length).toBe(25);
@@ -54,7 +58,7 @@ describe("El juego del UNO...", function() {
           var comodin4=partida.mazo.filter(function(each){
             return each.valor=="comodin4";
           });
-          expect(comodin4.length).toBe(4);
+          expect(comodin4.length).toBe(4);*/
     });
   
     it("Comprobamos la partida para 2 jugadores", function() {
@@ -87,6 +91,19 @@ describe("El juego del UNO...", function() {
       expect(partida.fase.nombre).toBe("Jugando");
   
     });
+    
+    it("Condiciones iniciales de la partida Jugando", function(){
+      var ju2=juego.usuarios["pepe"];
+      ju2.unirAPartida(partida.codigo);
+      ju1.manoInicial();
+      ju2.manoInicial();
+      expect(ju1.mano.length).toEqual(7);
+      expect(ju2.mano.length).toEqual(7);      
+      expect(partida.turno.nick).toEqual("ana");
+      expect(partida.direccion.nombre).toEqual("Derecha");
+      expect(partida.turno.nick).toEqual("ana");
+    });
+
     //Test para obtener partida y comprobar que el código partida esté definido
     it(" El código de partida del jugador está definido", function(){
       var codigo = ju1.codigoPartida

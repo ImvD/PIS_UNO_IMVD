@@ -29,12 +29,13 @@ function Juego(){
         //asignarla al array asociativo (Colección)
         this.partidas[codigo]=partida;
 
-        return partida;
+       return partida;
     }
     this.unirAPartida = function(nick,codigo){
         if (this.partidas[codigo]){
             var jugador = this.usuarios[nick];
-            this.partidas[codigo].unirAPartida(jugador)
+            this.partidas[codigo].unirAPartida(jugador);
+            console.log( nick + " se ha añadido a la partida de código " + codigo );
         }
     }
     this.obtenerTodasPartidas=function(){
@@ -166,7 +167,7 @@ function Partida(codigo,jugador,numJug){
         }*/
         }    
     };
-    this.asignarUnacarta=function(){
+    this.asignarUnaCarta=function(){
         var resultado;        
         //Obtienes la longitud del mazo
         var longitudMazo = this.mazo.length;
@@ -188,7 +189,7 @@ function Partida(codigo,jugador,numJug){
         }
         return cartas;
     }
-    this.pasarTurno=new function(){
+    this.pasarTurno= function(){
         this.fase.pasarTurno(nick,this);
     };
     this.puedePasarTurno = function(nick){
@@ -204,7 +205,7 @@ function Partida(codigo,jugador,numJug){
         this.fase.jugarCarta(carta,nick,this);
     }
     this.puedeJugarCarta=function(carta,nick){
-        if (nick=this.turno.nick){
+        if (nick==this.turno.nick){
             if(this.comprobarCarta(carta)){
                 //Comprobar el efecto de la carta
                 carta.comprobarEfecto(this);
@@ -288,20 +289,28 @@ function Izquierda(){
 }
 function Inicial(){
     this.nombre = "inicial";
-    this.unirAPartida = function ( partida,jugador){
+    this.unirAPartida = function (partida,jugador){
         partida.puedeUnirAPartida(jugador);
         //Si numero de jugadores < numJug
         if(partida.numeroJugadores() == partida.numJug){ 
             partida.fase = new Jugando();
             partida.asignarTurno();
             partida.cartaInicial();
-        }        
+        }
     }
+    this.jugarCarta=function(carta,nick,partida){
+            console.log("La partida no ha comenzado");
+    }
+    this.pasarTurno=function(nick,partida){
+            console.log("La partida no ha comenzado");
+    }        
+    
 }
 function Jugando(){    
     this.nombre = "jugando";
     this.unirAPartida = function ( partida,jugador){
         console.log("La partida ya ha comenzado");
+        jugador.codigoPartida=-1;
     }
     this.jugarCarta=function(carta,nick,partida){
         partida.puedeJugarCarta(carta,nick);
@@ -316,6 +325,7 @@ function Final(){
     this.nombre = "final";
     this.unirAPartida = function ( partida,jugador){
         console.log("La partida ya ha comenzado");
+        jugador.codigoPartida=-1;
     }
     this.jugarCarta=function(carta,nick,partida){
         console.log("La partida ya ha terminado");

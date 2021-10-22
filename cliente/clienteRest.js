@@ -9,4 +9,14 @@ function ClienteRest(){
                 console.log(data);
         })        
     }
+    this.unirAPartida = function(nick,codigo){
+        $.getJSON("/unirAPartida/"+nick+"/"+codigo,function(data){
+                console.log(data);
+        })        
+    }
+    this.obtenerListaPartidas = function(nick){
+        $.getJSON("/obtenerListaPartidas/",function(data){
+                console.log(data);
+        })        
+    }
 }

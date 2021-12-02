@@ -2,6 +2,7 @@
 
 <head>
     <title>Aplicacion del uno</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
@@ -22,18 +23,27 @@
 </head>
 
 <body>
-
+    <div class="jumbotron text-center" style="margin-bottom:10;background-color: cadetblue;">
+        <h1>Bienvenido al juego del UNO</h1>
+        <p>Llama a tus amigos y pasad un buen rato jugando!</p>
+    </div>
     <div class="container-md">
         <div class="row">
-            <div class="col-md-4">
-                <h2>Juego de cartas: El UNO</h2>
+            <div class="col-md-5">
             </div>
-            <div class="col-md-8">
-                <div id="agregarJugador"></div>
-                <div id="crearPartida">Crear partida</div>
-                <div id="esperando">Esperando rival</div>
-                <div id="listaPartidas">Lista de partidas</div>
-                <div id="unirAPartida">Unir a partida</div>
+            <div class="col-md-2">
+                <div id="agregarJugador" style="text-align:center;"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div id="crearPartida" style="text-align:center;"></div>
+            </div>
+            <div class="col-md-3">
+                <div id="esperando"></div>
+            </div>
+            <div class="col-md-3">
+                <div id="unirAPartida"></div>
             </div>
         </div>
     </div>
@@ -43,8 +53,12 @@
         var ws = new ClienteWS();
         var iu = new ControlWeb();
         iu.mostrarAgregarJugador();
+        //iu.mostrarCrearPartida();
             //socket=io();
     </script>
+    <div class="jumbotron text-center" style="margin-bottom:0">
+        <p>Realizado por Ivan Martinez-Villanueva Duran</p>
+    </div>
 </body>
 
 </html>

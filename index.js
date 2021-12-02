@@ -7,6 +7,12 @@ var { Server } = require("socket.io");
 var io = new Server(http);
 //Para desempaquetar la información del post
 var bodyParser = require("body-parser");
+
+//Var passport
+//Var cookieSession
+
+var LocalStrategy = require("passport-local").Strategy;
+
 var modelo = require("./servidor/modelo.js");
 //Servidor de WS
 var ssrv = require("./servidor/servidorWS.js");
@@ -17,6 +23,23 @@ var servidorWS = new ssrv.ServidorWS();
 app.set("port", process.env.PORT || 5000);
 
 app.use(express.static(__dirname + "/"));
+
+//Bodyparser --
+
+passport.use(
+  new LocalStrategy(
+    { usernameField: "email", passwordField: "clave" },
+    function (email, clave, done) {
+      juego.loginUsuario(email.clave, function (err, user) {
+        if (err) {
+          return done(err);
+        } else {
+          return done(null, user);
+        }
+      });
+    }
+  )
+);
 
 //Para cada petición Get se usa una función de callback
 app.get("/", function (request, response) {
@@ -30,6 +53,19 @@ app.get("/agregarJugador/:nick", function (request, response) {
   var nick = request.params.nick;
   var res = juego.agregarJugador(nick);
   response.send(res);
+});
+
+//login
+app.post(
+  "/loginUsuario",
+  passport.authenticate("local", {
+    failureRedirect: "/fallo",
+    successRedirect: "/ok",
+  })
+);
+
+app.get("/ok", haIniciado, function (request, response) {
+  response.send({ nick: request.user.nick });
 });
 //Crear partida
 app.get("/crearPartida/:nick/:njug", function (request, response) {
@@ -66,6 +102,13 @@ app.get("/unirAPartida/:nick/:codigo", function (request, response) {
 app.get("/obtenerListaPartidas", function (request, response) {
   if (juego) {
     var lista = juego.obtenerTodasPartidas();
+    response.send(lista);
+  }
+});
+//Obtener lista de partidas disponibles
+app.get("/obtenerListaPartidasDisponibles", function (request, response) {
+  if (juego) {
+    var lista = juego.obtenerTodasPartidasDisponibles();
     response.send(lista);
   }
 });

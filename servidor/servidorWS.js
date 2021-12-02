@@ -6,6 +6,10 @@ function ServidorWS() {
   this.enviarATodos = function (io, codigo, mens, datos) {
     io.sockets.in(codigo).emit(mens, datos);
   };
+  this.enviarGlobal = function (socket, mens, datos) {
+    socket.broadcast.emit(mens, datos);
+  };
+
   //Zona servidor del servidor WS.
   this.lanzarServidorWS = function (io, juego) {
     var cli = this; // variable para que el contexto de la ejecución continúe en este objeto

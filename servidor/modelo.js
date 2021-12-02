@@ -2,6 +2,7 @@ function Juego() {
   this.usuarios = {};
   this.partidas = {};
 
+  
   this.agregarJugador = function (nick) {
     var res = { nick: -1 };
     if (!this.usuarios[nick]) {
@@ -39,6 +40,14 @@ function Juego() {
     }
   };
   this.obtenerTodasPartidas = function () {
+    var lista = [];
+    for (each in this.partidas) {
+      var partida = this.partidas[each];
+      lista.push({ propietario: partida.propietario, codigo: each });
+    }
+    return lista;
+  };
+  this.obtenerTodasPartidasDisponibles = function () {
     var lista = [];
     for (each in this.partidas) {
       var partida = this.partidas[each];
@@ -112,6 +121,31 @@ function Jugador(nick, juego) {
       partida.finPartida();
     }
   };
+  //this.recibeturno
+  this.recibeTurno= function(this){
+
+  };
+
+  this.bloquear = function () {
+    this.estado = new Bloqueado();
+  };
+}
+
+function Normal() {
+  this.nombre = "normal";
+  this.recibeTurno = function (partida, jugador) {
+    partida.jugadorPuedeJugar(jugador);
+  };
+}
+
+function Bloqueado() {
+  this.nombre = "bloqueado";
+  this.recibeTurno=function(partida,jugador){
+    partida.jugadorPuedeJugar(jugador);
+    jugador.pasarTurno();
+    jugador.estado = new Normal();
+  }
+
 }
 
 function Partida(codigo, jugador, numJug) {
@@ -155,11 +189,10 @@ function Partida(codigo, jugador, numJug) {
       this.mazo.push(new Cambio(20, colores[i]));
       //this.mazo.push(new Cambio(20,colores[i]));
 
-      /*
-            this.mazo.push(new Bloqueo(20,colores[i]));
-            this.mazo.push(new Bloqueo(20,colores[i]));
-        
-        
+      this.mazo.push(new Bloqueo(20, colores[i]));
+      this.mazo.push(new Bloqueo(20, colores[i]));
+
+      /* 
             this.mazo.push(new Mas2(20,colores[i]));
             this.mazo.push(new Mas2(20,colores[i]));
         
@@ -203,9 +236,14 @@ function Partida(codigo, jugador, numJug) {
     var nick = this.ordenTurno[0];
     this.turno = this.jugadores[nick];
   };
+  this.jugadorPuedeJugar = function (jugador) {
+    this.turno = jugador;
+  };
   this.jugarCarta = function (carta, nick) {
     this.fase.jugarCarta(carta, nick, this);
   };
+  //Do it
+  this.quitarCarta = function (carta) {};
   this.puedeJugarCarta = function (carta, nick) {
     if (nick == this.turno.nick) {
       if (this.comprobarCarta(carta)) {
@@ -227,12 +265,14 @@ function Partida(codigo, jugador, numJug) {
   };
   this.comprobarCarta = function (carta) {
     //Tengo que comprobar que la carta que deseo jugar la puedo jugar según la que haya en la mesa.
-
     return (
       (this.cartaActual.tipo == "numero" &&
         (this.cartaActual.color == carta.color ||
           this.cartaActual.valor == carta.valor)) ||
       (this.cartaActual.tipo == "cambio" &&
+        (this.cartaActual.color == carta.color ||
+          this.cartaActual.tipo == carta.tipo)) ||
+      (this.cartaActual.tipo == "bloqueo" &&
         (this.cartaActual.color == carta.color ||
           this.cartaActual.tipo == carta.tipo))
     );
@@ -263,6 +303,8 @@ function Partida(codigo, jugador, numJug) {
     }
     this.turno.puntos = suma;
   };
+
+  this.bloquearSiguiente = function () {};
   //Siempre tiene que ser la última línea
   this.crearMazo();
   this.unirAPartida(jugador);
@@ -354,7 +396,9 @@ function Bloqueo(valor, color) {
   this.tipo = "bloqueo";
   this.color = color;
   this.valor = valor;
-  this.comprobarEfecto = function (partida) {};
+  this.comprobarEfecto = function (partida) {
+    partida.bloquearSiguiente();
+  };
 }
 //Cambio
 function Cambio(valor, color) {

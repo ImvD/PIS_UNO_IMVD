@@ -67,6 +67,15 @@ app.post(
 app.get("/ok", haIniciado, function (request, response) {
   response.send({ nick: request.user.nick });
 });
+app.get("/confirmarUsuario/:direccion/:key", function (request, response) {
+  var email = request.params.direccion;
+  var key = request.params.key;
+  
+  juego.confirmarUsuario(email,key,function(data){
+    //Comprobar data y si ha ido bien le mando al login
+    response.send(data);
+  });
+ });
 //Crear partida
 app.get("/crearPartida/:nick/:njug", function (request, response) {
   var nick = request.params.nick;
@@ -117,3 +126,4 @@ http.listen(app.get("port"), function () {
 });
 //Lanzo el servidor de WS
 servidorWS.lanzarServidorWS(io, juego);
+

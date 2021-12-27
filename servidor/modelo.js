@@ -1,8 +1,73 @@
-function Juego() {
+var cad = require("./cad.js");
+var cf = ("./cifrado.js");
+var moduloEmail = require("./email.js"); //Guardo los métodos para autentificarme con Sengrit(Credenciales) y enviarlo
+
+function Juego(test) {
   this.usuarios = {};
   this.partidas = {};
+  this.test = test;
+  //cad -> base de datos
+  this.cad;
 
-  
+  this.registrarUsuario = function (email, clave, cb) {
+    var ju = this;
+    var claveCifrada = cf.encryptStr(clave, "sEcrEtA");
+    var nick = email;
+    var key = new (Date().valueOf()).toString();
+
+    this.cad.encontrarUsuarioCriterio({ email: email }, function (usr) {
+      if (!usr) {
+        ju.cad.insertarUsuario(
+          {
+            email: email,
+            clave: claveCifrada,
+            key: key,
+            nick: nick,
+            confirmada: false,
+          },
+          function (usu) {
+            cb({ email: "ok" });
+          }
+        );
+        //Enviar email a la cuenta con un enlace de confirmación
+        moduloEmail.enviarEmailConfirmacion(email, key);
+      } else {
+        cb({ email: "nook" });
+      }
+    });
+  };
+  this.confirmarUsuario = function (email, key, cb) {
+    var ju = this;
+
+    this.cad.encontrarUsuarioCriterio(
+      { email: email, key: key, confirmada: false },
+      function (usr) {
+        if (usr) {
+          usr.confirmada = true;
+          //Actualizamos el usuario
+          ju.cad.modificarColeccionUsuarios(usr, function (resutl) {
+            cb({ res: "ok" });
+          });
+        } else {
+          cb({ res: "nook" });
+        }
+      }
+    );
+  };
+  this.loginUsuario = function (email, clave, cb) {
+    var ju = this;
+    var nick = email;
+    this.cad.encontrarUsuarioCriterio({ email: email }, function (usr) {
+      var clavedesCifrada = cf.decryptStr(usr.clave, "sEcrEtA");
+      if (usr && clave == clavedesCifrada && usr.confirmada) {
+        cb(usr);
+        ju.agregarJugador(usr.nick);
+      } else {
+        cb({ nick: "nook" });
+      }
+    });
+  };
+
   this.agregarJugador = function (nick) {
     var res = { nick: -1 };
     if (!this.usuarios[nick]) {
@@ -68,7 +133,31 @@ function Juego() {
   this.numeroPartidas = function () {
     return Object.keys(this.partidas).length;
   };
-}
+  this.obtenerTodosResultados = function () {
+    this.cad.encontrarTodosResultados(function (lista) {
+      callback(lista);
+    });
+  };
+
+  this.obtenerResultados = function (criterio, callback) {
+    this.cad.encontrarResultadoCriterio(criterio, callback);
+  };
+
+  this.insertarResultado = function (resultado) {
+    this.cad.encontrarTodosResultados(resultado, function (res) {
+      console.log(res);
+    });
+  };
+
+  if (!test) {
+    this.cad = new cad.CAD();
+    this.cad.conectar(function () {});
+  }
+
+  this.borrarUsuario = function (nick) {
+    delete this.usuarios[nick];
+  };
+} //Final Juego
 
 function randomInt(low, high) {
   return Math.floor(Math.random() * (high - low) + low);
@@ -80,6 +169,7 @@ function Jugador(nick, juego) {
   this.mano = [];
   this.codigoPartida;
   this.puntos = 0;
+  this.estado = new Normal();
   //El jugador es el que crea la partida
   this.crearPartida = function (numJug) {
     return this.juego.crearPartida(nick, numJug);
@@ -96,7 +186,7 @@ function Jugador(nick, juego) {
   };
   this.robar = function (num) {
     var partida = this.obtenerPartida(this.codigoPartida);
-    if (partida.turno.nick == this.nick) {
+    if (partida.turno.nick) {
       var robadas = partida.dameCartas(num);
       this.mano = this.mano.concat(robadas);
     }
@@ -121,15 +211,26 @@ function Jugador(nick, juego) {
       partida.finPartida();
     }
   };
-  //this.recibeturno
-  this.recibeTurno= function(this){
-
+  this.recibeTurno = function (partida) {
+    this.estado.recibeTurno(partida, this);
   };
-
+  this.abandonarPartida = function () {
+    var partida = this.obtenerPartida(this.codigoPartida);
+    if (partida) {
+      partida.fase = new Final();
+    }
+  };
   this.bloquear = function () {
     this.estado = new Bloqueado();
   };
-}
+  this.cerrarSesion = function () {
+    delete this.juego.borrarUsuario(this.nick);
+  };
+  this.insertarResultado = function (prop, numJug) {
+    var resultado = new Resultado(prop, this.nick, this.puntos, numJug);
+    this.juego.insertarResultado(resultado);
+  };
+} //Fin Jugador
 
 function Normal() {
   this.nombre = "normal";
@@ -140,13 +241,14 @@ function Normal() {
 
 function Bloqueado() {
   this.nombre = "bloqueado";
-  this.recibeTurno=function(partida,jugador){
+  this.recibeTurno = function (partida, jugador) {
     partida.jugadorPuedeJugar(jugador);
     jugador.pasarTurno();
     jugador.estado = new Normal();
-  }
-
+  };
 }
+
+//--------------------------Por donde voy copiando--------------------------------
 
 function Partida(codigo, jugador, numJug) {
   this.codigo = codigo;
@@ -242,6 +344,7 @@ function Partida(codigo, jugador, numJug) {
   this.jugarCarta = function (carta, nick) {
     this.fase.jugarCarta(carta, nick, this);
   };
+
   //Do it
   this.quitarCarta = function (carta) {};
   this.puedeJugarCarta = function (carta, nick) {
@@ -256,7 +359,7 @@ function Partida(codigo, jugador, numJug) {
         this.turno.quitarCarta(carta);
         //Pasar turno
         this.pasarTurno(nick);
-      }
+      } else console.log("Esa carta no está permitida");
     }
   };
   this.cambiarCartaActual = function (carta) {
@@ -292,10 +395,11 @@ function Partida(codigo, jugador, numJug) {
   this.finPartida = function () {
     this.fase = new Final();
     this.calcularPuntos();
+    this.turno.insertarResultado(this.propietario, this.numJug);
   };
   this.calcularPuntos = function () {
     var suma = 0;
-    for (jug in this.jugadores) {
+    for (var jug in this.jugadores) {
       for (i = 0; i < this.jugadores[jug].mano.length; i++) {
         suma = suma + this.jugadores[jug].mano[i].valor;
       }
@@ -304,7 +408,12 @@ function Partida(codigo, jugador, numJug) {
     this.turno.puntos = suma;
   };
 
-  this.bloquearSiguiente = function () {};
+  this.bloquearSiguiente = function () {
+    //Obtenemos el siguiente jugador
+    var jugador = this.direccion.obtenerSiguiente(this);
+    jugador.estado = new Bloqueado();
+  };
+
   //Siempre tiene que ser la última línea
   this.crearMazo();
   this.unirAPartida(jugador);
@@ -318,8 +427,16 @@ function Derecha() {
     //Asignar el turno al nuevo jugador
     var nick = partida.turno.nick;
     var indice = partida.ordenTurno.indexOf(nick);
-    var siguiente = (indice + 1) & Object.keys(partida.jugadores).length;
-    partida.turno = partida.jugadores[partida.ordenTurno[siguiente]];
+    var siguiente = (indice + 1) % Object.keys(partida.jugadores).length;
+    var jugador = partida.jugadores[partida.ordenTurno[siguiente]];
+    jugador.recibeTurno(partida);
+  };
+  this.obtenerSiguiente = function (partida) {
+    var nick = partida.turno.nick;
+    var indice = partida.ordenTurno.indexOf(nick);
+    var siguiente = (indice + 1) % Object.keys(partida.jugadores).length; //probar indice +2
+    var jugador = partida.jugadores[partida.ordenTurno[siguiente]];
+    return jugador;
   };
 }
 function Izquierda() {
@@ -331,7 +448,18 @@ function Izquierda() {
     if (siguiente < 0) {
       siguiente = Object.keys(partida.jugadores).length - 1;
     }
-    partida.turno = partida.jugadores[partida.ordenTurno[siguiente]];
+    var jugador = partida.jugadores[partida.ordenTurno[siguiente]];
+    jugador.recibeTurno(partida);
+  };
+  this.obtenerSiguiente = function (partida) {
+    var nick = partida.turno.nick;
+    var indice = partida.ordenTurno.indexOf(nick);
+    var siguiente = (indice - 1) % Object.keys(partida.jugadores).length;
+    if (siguiente < 0) {
+      siguiente = Object.keys(partida.jugadores).length - 1;
+    }
+    var jugador = partida.jugadores[partida.ordenTurno[siguiente]];
+    return jugador;
   };
 }
 function Inicial() {

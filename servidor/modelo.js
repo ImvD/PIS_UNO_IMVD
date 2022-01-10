@@ -1,5 +1,5 @@
 var cad = require("./cad.js");
-var cf = ("./cifrado.js");
+var cf = "./cifrado.js";
 var moduloEmail = require("./email.js"); //Guardo los métodos para autentificarme con Sengrit(Credenciales) y enviarlo
 
 function Juego(test) {
@@ -13,7 +13,7 @@ function Juego(test) {
     var ju = this;
     var claveCifrada = cf.encryptStr(clave, "sEcrEtA");
     var nick = email;
-    var key = new (Date().valueOf()).toString();
+    var key = (new Date().valueOf()).toString();
 
     this.cad.encontrarUsuarioCriterio({ email: email }, function (usr) {
       if (!usr) {
@@ -23,7 +23,7 @@ function Juego(test) {
             clave: claveCifrada,
             key: key,
             nick: nick,
-            confirmada: false,
+            confirmada: false
           },
           function (usu) {
             cb({ email: "ok" });
@@ -108,7 +108,7 @@ function Juego(test) {
     var lista = [];
     for (each in this.partidas) {
       var partida = this.partidas[each];
-      lista.push({ propietario: partida.propietario, codigo: each });
+      lista.push({ propietario:partida.propietario, codigo:each });
     }
     return lista;
   };
@@ -116,7 +116,7 @@ function Juego(test) {
     var lista = [];
     for (each in this.partidas) {
       var partida = this.partidas[each];
-      lista.push({ propietario: partida.propietario, codigo: each });
+      lista.push({ propietario:partida.propietario, codigo:each });
     }
     return lista;
   };
@@ -162,7 +162,7 @@ function Juego(test) {
 function randomInt(low, high) {
   return Math.floor(Math.random() * (high - low) + low);
 }
-
+//Copia por aquí 28-12
 function Jugador(nick, juego) {
   this.nick = nick;
   this.juego = juego;

@@ -114,4 +114,3 @@ function CAD() {
 }
 
 module.exports.CAD = CAD;
-//function this.conectar

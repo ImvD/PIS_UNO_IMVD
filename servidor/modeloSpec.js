@@ -1,5 +1,5 @@
 var modelo = require("./modelo.js");
-//Esjta función define la prueba
+//Esta función define la prueba
 describe("El juego del UNO...", function () {
   var juego;
 
@@ -13,9 +13,10 @@ describe("El juego del UNO...", function () {
   it("Condiciones iniciales", function () {
     expect(juego.numeroPartidas()).toEqual(0);
     expect(juego.obtenerTodasPartidas().length).toEqual(0);
+    expect(juego.obtenerPartidasDisponibles().length).toEqual(0);
   });
 
-  describe("Ana crea una partida de 2 jugadores..", function () {
+  describe("Ana crea una partida de 2 jugadores...", function() {
     var ju1;
     var partida;
 
@@ -142,8 +143,9 @@ describe("El juego del UNO...", function () {
         expect(partida.fase.nombre).toEqual("jugando");
       });
 
-      it("Ana roba 1 carta", function () {
+      it("Ana roba 1 carta",function(){
         expect(ju1.mano.length).toBe(7);
+        expect(ju1.mano.length).toEqual(7);
         ju1.robar(1);
         expect(ju1.mano.length).toBe(8);
       });
@@ -166,6 +168,11 @@ describe("El juego del UNO...", function () {
         expect(partida.cartaActual.tipo).toEqual("bloqueo");
         //expect(ju2.estado.tipo).toEqual("bloqueado");
       });
+      it("Ana abndona partida",function(){
+        expect(partida.fase.nombre).toBe("jugando");
+        ju1.abandonarPartida();
+        expect(partida.fase.nombre).toBe("final");
+      })
     });
   });
   describe("Ana crea una partida de 3 jugadores..", function () {

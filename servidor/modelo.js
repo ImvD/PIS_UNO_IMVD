@@ -62,6 +62,7 @@ function Juego(test) {
       if (usr && clave == clavedesCifrada && usr.confirmada) {
         cb(usr);
         ju.agregarJugador(usr.nick);
+        console.log("Usuario inicia sesión")
       } else {
         cb({ nick: "nook" });
       }
@@ -69,11 +70,11 @@ function Juego(test) {
   };
 
   this.agregarJugador = function (nick) {
-    var res = { nick: -1 };
+    var res = { "nick": -1 };
     if (!this.usuarios[nick]) {
       var jugador = new Jugador(nick, this);
       this.usuarios[nick] = jugador;
-      res = { nick: nick };
+      res = { "nick": nick };
     } else {
       console.log("El usuario" + nick + " ya está creado");
     }
@@ -162,7 +163,7 @@ function Juego(test) {
 function randomInt(low, high) {
   return Math.floor(Math.random() * (high - low) + low);
 }
-//Copia por aquí 28-12
+
 function Jugador(nick, juego) {
   this.nick = nick;
   this.juego = juego;
@@ -247,8 +248,6 @@ function Bloqueado() {
     jugador.estado = new Normal();
   };
 }
-
-//--------------------------Por donde voy copiando--------------------------------
 
 function Partida(codigo, jugador, numJug) {
   this.codigo = codigo;
@@ -427,14 +426,14 @@ function Derecha() {
     //Asignar el turno al nuevo jugador
     var nick = partida.turno.nick;
     var indice = partida.ordenTurno.indexOf(nick);
-    var siguiente = (indice + 1) % Object.keys(partida.jugadores).length;
+    var siguiente = (indice + 1)%(Object.keys(partida.jugadores).length);
     var jugador = partida.jugadores[partida.ordenTurno[siguiente]];
     jugador.recibeTurno(partida);
   };
   this.obtenerSiguiente = function (partida) {
     var nick = partida.turno.nick;
     var indice = partida.ordenTurno.indexOf(nick);
-    var siguiente = (indice + 1) % Object.keys(partida.jugadores).length; //probar indice +2
+    var siguiente = (indice + 1)%(Object.keys(partida.jugadores).length); //probar indice +2
     var jugador = partida.jugadores[partida.ordenTurno[siguiente]];
     return jugador;
   };
@@ -444,7 +443,7 @@ function Izquierda() {
   this.pasarTurno = function (partida) {
     var nick = partida.turno.nick;
     var indice = partida.ordenTurno.indexOf(nick);
-    var siguiente = (indice - 1) % Object.keys(partida.jugadores).length;
+    var siguiente = (indice - 1)%(Object.keys(partida.jugadores).length);
     if (siguiente < 0) {
       siguiente = Object.keys(partida.jugadores).length - 1;
     }
@@ -454,7 +453,7 @@ function Izquierda() {
   this.obtenerSiguiente = function (partida) {
     var nick = partida.turno.nick;
     var indice = partida.ordenTurno.indexOf(nick);
-    var siguiente = (indice - 1) % Object.keys(partida.jugadores).length;
+    var siguiente = (indice - 1)%(Object.keys(partida.jugadores).length);
     if (siguiente < 0) {
       siguiente = Object.keys(partida.jugadores).length - 1;
     }
@@ -484,7 +483,7 @@ function Jugando() {
   this.nombre = "jugando";
   this.unirAPartida = function (partida, jugador) {
     console.log("La partida ya ha comenzado");
-    jugador.codigoPartida = -1;
+    jugador.codigoPartida=-1;
   };
   this.jugarCarta = function (carta, nick, partida) {
     partida.puedeJugarCarta(carta, nick);
@@ -497,8 +496,8 @@ function Jugando() {
 function Final() {
   this.nombre = "final";
   this.unirAPartida = function (partida, jugador) {
-    console.log("La partida ya ha comenzado");
-    jugador.codigoPartida = -1;
+    console.log("La partida ya ha terminado");
+    jugador.codigoPartida=-1;
   };
   this.jugarCarta = function (carta, nick, partida) {
     console.log("La partida ya ha terminado");
@@ -515,6 +514,7 @@ function Numero(valor, color) {
   this.tipo = "numero";
   this.color = color;
   this.valor = valor;
+  this.nombre = "numero"+valor;
   this.comprobarEfecto = function (partida) {
     console.log("No hay efecto");
   };
@@ -524,6 +524,7 @@ function Bloqueo(valor, color) {
   this.tipo = "bloqueo";
   this.color = color;
   this.valor = valor;
+  this.nombre = "bloqueo"+valor;
   this.comprobarEfecto = function (partida) {
     partida.bloquearSiguiente();
   };
@@ -533,6 +534,7 @@ function Cambio(valor, color) {
   this.tipo = "cambio";
   this.color = color;
   this.valor = valor;
+  this.nombre = "cambio"+valor;
   this.comprobarEfecto = function (partida) {
     partida.cambiarDireccion();
   };
@@ -542,6 +544,7 @@ function Mas2(valor, color) {
   this.tipo = "mas2";
   this.color = color;
   this.valor = valor;
+  this.nombre = "mas2"+valor;
   this.comprobarEfecto = function (partida) {};
 }
 //Mas4(Chupate)
@@ -549,12 +552,14 @@ function Mas4(valor) {
   this.tipo = "mas4";
   this.color = color;
   this.valor = valor;
+  this.nombre = "mas4"+valor;
   this.comprobarEfecto = function (partida) {};
 }
 //Comodín
 function Comodin(valor) {
   this.tipo = "comodin";
   this.valor = valor;
+  this.nombre = "comodin"+valor;
   this.comprobarEfecto = function (partida) {};
 }
 
@@ -563,7 +568,15 @@ function Comodin(valor) {
 function Comodin4(valor) {
   this.tipo = "comodin4";
   this.valor = valor;
+  this.nombre = "comodin4"+valor;
   this.comprobarEfecto = function (partida) {};
+}
+function Resultado(prop,ganador,puntos,numJug){
+  this.propietario=prop;
+  this.ganador=ganador;
+  this.puntos=puntos;
+  this.numeroJugadores=numJug;
+
 }
 /*
 var juego;

@@ -1,12 +1,23 @@
 function ControlWeb() {
+  this.comprobarUsuario=function(){
+    if ($.cookie("nick")){
+        ws.nick=$.cookie("nick");
+        iu.mostrarHome({nick:ws.nick});
+        iu.mostrarCrearPartida(ws.nick);
+    }
+    else{
+        iu.mostrarAgregarJugador();
+    }
+
+}
   this.mostrarAgregarJugador = function () {
+        //$("#mAJ").remove();
+        //$("#mC").remove();
     var cadena = '<div id="mAJ"><label for="usr">Nick:</label>';
     cadena += '<input type="text" class="form-control" id="usr" placeholder="Introduce tu nick" style="margin-bottom:10"></input>';
-    cadena +=
-      '<button type="button" id="btnAgregarJu"class="btn btn-primary" style="margin-bottom:10">Entrar</button>';
+    cadena += '<button type="button" id="btnAgregarJu"class="btn btn-primary" style="margin-bottom:10">Entrar</button>';
     cadena += "</div>";
-    cadena +=
-      '<div class="alert alert-success" id="alertaBuenUsuario" style="display: none">';
+    cadena += '<div class="alert alert-success" id="alertaBuenUsuario" style="display: none">';
     cadena += "<strong>Success!</strong>";
     cadena += "</div>";
     $("#agregarJugador").append(cadena);
@@ -14,7 +25,9 @@ function ControlWeb() {
     $("#btnAgregarJu").on("click", function () {
       var nick = $("#usr").val();
       //Comprobar que el nick no es vacío
-      
+      if(nick==""){
+        iu.mostrarModal("Hay que intoducir un nick");
+      }else{
         //document.getElementById("alertaBuenUsuario").style.display = "block";
         //$("#alertaBuenUsuario").style.display = "block";
         //$("#agregarJugador").append(cadena);
@@ -22,7 +35,7 @@ function ControlWeb() {
         rest.agregarJugador(nick);
       
         //swal("Error", "Debes de añadir un nombre de usuario", "error");
-      
+      }
     });
   };
   this.mostrarCrearPartida = function (nick) {

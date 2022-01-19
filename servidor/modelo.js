@@ -1,6 +1,6 @@
 var cad = require("./cad.js");
 var cf = "./cifrado.js";
-var moduloEmail = require("./email.js"); //Guardo los métodos para autentificarme con Sengrit(Credenciales) y enviarlo
+//var moduloEmail = require("./email.js"); //Guardo los métodos para autentificarme con Sengrit(Credenciales) y enviarlo
 
 function Juego(test) {
   this.usuarios = {};
@@ -17,20 +17,12 @@ function Juego(test) {
 
     this.cad.encontrarUsuarioCriterio({ email: email }, function (usr) {
       if (!usr) {
-        ju.cad.insertarUsuario(
-          {
-            email: email,
-            clave: claveCifrada,
-            key: key,
-            nick: nick,
-            confirmada: false
-          },
-          function (usu) {
+        ju.cad.insertarUsuario({email: email,clave: claveCifrada,key: key,nick: nick,confirmada: false},function (usr) {
             cb({ email: "ok" });
           }
         );
         //Enviar email a la cuenta con un enlace de confirmación
-        moduloEmail.enviarEmailConfirmacion(email, key);
+        //moduloEmail.enviarEmailConfirmacion(email, key);
       } else {
         cb({ email: "nook" });
       }
@@ -145,7 +137,7 @@ function Juego(test) {
   };
 
   this.insertarResultado = function (resultado) {
-    this.cad.encontrarTodosResultados(resultado, function (res) {
+    this.cad.insertarResultado(resultado, function (res) {
       console.log(res);
     });
   };

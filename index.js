@@ -99,14 +99,14 @@ app.get("/fallo",function(request,response){
 app.get("/google/callback",passport.authenticate('google',{failureRedirect:'/fallo'}),function(request,response){
 	response.redirect("/good");
 });
-/*
+
 //Agregar jugador
 app.get("/agregarJugador/:nick", function (request, response) {
   var nick = request.params.nick;
   var res = juego.agregarJugador(nick);
   response.send(res);
 });
-*/
+
 
 app.post('/registrarUsuario',function(request,response){
 	var email=request.body.email;

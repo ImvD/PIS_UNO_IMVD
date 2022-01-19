@@ -64,7 +64,7 @@ function CAD() {
     var cad = this;
 
     mongo.connect(
-      "mongodb+srv://admin:admin@juego-uno.wd5vr.mongodb.net/Juego-Uno?retryWrites=true&w=majority",
+      "mongodb+srv://patata:patata@cluster0.owuvz.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
       function (err, db) {
         if (err) {
           console.log("No se pudo conectar");

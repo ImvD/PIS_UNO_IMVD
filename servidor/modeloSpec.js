@@ -4,7 +4,7 @@ describe("El juego del UNO...", function () {
   var juego;
 
   beforeEach(function () {
-    juego = new modelo.Juego(); //Juego(true) Para evitar que los tests se conecten a la bbdd
+    juego = new modelo.Juego(true); //Juego(true) Para evitar que los tests se conecten a la bbdd
     juego.agregarJugador("Juan");
     juego.agregarJugador("Ana");
     juego.agregarJugador("Pepe");
@@ -13,7 +13,7 @@ describe("El juego del UNO...", function () {
   it("Condiciones iniciales", function () {
     expect(juego.numeroPartidas()).toEqual(0);
     expect(juego.obtenerTodasPartidas().length).toEqual(0);
-    expect(juego.obtenerPartidasDisponibles().length).toEqual(0);
+    expect(juego.obtenerTodasPartidasDisponibles().length).toEqual(0);
   });
 
   describe("Ana crea una partida de 2 jugadores...", function() {
@@ -127,12 +127,12 @@ describe("El juego del UNO...", function () {
 
       it("Ana juega carta", function () {
         partida.cartaActual.color = ju1.mano[0].color;
+        expect(partida.turno.nick).toEqual("Ana");
         ju1.jugarCarta(0);
         expect(partida.turno.nick).toEqual("Pepe");
         ju2.pasarTurno();
         partida.cartaActual.color = ju1.mano[0].color;
-
-        expect(partida.turno.nick).toEqual("Raul");
+        expect(partida.turno.nick).toEqual("Ana");
         ju1.jugarCarta(0);
         expect(partida.turno.nick).toEqual("Pepe");
         ju2.pasarTurno();
@@ -186,13 +186,13 @@ describe("El juego del UNO...", function () {
       ju2 = juego.usuarios["Pepe"];
       ju2.unirAPartida(partida.codigo);
       ju2.manoInicial();
-      ju3 = juego.usuarios["Raul"];
+      ju3 = juego.usuarios["Juan"];
       ju3.unirAPartida(partida.codigo);
       ju3.manoInicial();
     });
 
     it("condiciones iniciales", function () {
-      expect(partida.mazo.length).toBe(22);
+      expect(partida.mazo.length).toBe(17);
 
       var carta = ju1.mano[0];
 

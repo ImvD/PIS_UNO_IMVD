@@ -68,16 +68,16 @@ function ClienteRest() {
       console.log(data);
     });
   };
-  this.obtenerListaPartidas = function (nick) {
+  this.obtenerListaPartidas = function () {
     $.getJSON("/obtenerListaPartidas/", function (data) {
       console.log(data);
-      //iu.mostrarlistapartidas(data);
+      iu.mostrarPartidasDisponibles(data);
     });
   };
   this.obtenerListaPartidasDisponibles = function (nick) {
     $.getJSON("/obtenerListaPartidasDisponibles/", function (data) {
       console.log(data);
-      iu.mostrarlistapartidasDisponibles(data);
+      iu.mostrarPartidasDisponibles(data);
     });
   };
   this.obtenerTodosResultados=function(){
@@ -93,6 +93,12 @@ function ClienteRest() {
             //iu.mostrarListaResultados(data);
 		})
 	};
-
+  //**********Prueba********** 
+  this.obtenerDatosPartida=function(codigo){
+    $.getJSON("/obtenerDatosPartida/"+codigo, function (data) {
+      console.log(data);
+      iu.mostrarDatosPartida(data);
+    });
+  }
 
 }

@@ -2,7 +2,7 @@ function ControlWeb() {
   this.comprobarUsuario=function(){
     if ($.cookie("nick")){
         ws.nick=$.cookie("nick");
-        iu.mostrarHome({nick:ws.nick});
+        iu.mostrarHome({nick: ws.nick});
         iu.mostrarCrearPartida(ws.nick);
     }
     else{
@@ -13,13 +13,15 @@ function ControlWeb() {
   this.mostrarAgregarJugador = function () {
         //$("#mAJ").remove();
         //$("#mC").remove();
-    var cadena = '<div id="mAJ"><label for="usr">Nick:</label>';
+    /*var cadena = ' <div class="form-row"><div id="mAJ"><label for="usr">Nick:</label>';
     cadena += '<input type="text" class="form-control" id="usr" placeholder="Introduce tu nick" style="margin-bottom:10"></input>';
     cadena += '<button type="button" id="btnAgregarJu"class="btn btn-primary" style="margin-bottom:10">Entrar</button>';
     cadena += "</div>";
     cadena += '<div class="alert alert-success" id="alertaBuenUsuario" style="display: none">';
     cadena += "<strong>Success!</strong>";
-    cadena += "</div>";
+    cadena += "</div>";*/
+    var cadena = '<a href="/auth/google" class="btn btn-primary mb-2 mr-sm-2">Acceso a Google</a>';
+
     $("#agregarJugador").append(cadena);
 
     $("#btnAgregarJu").on("click", function () {
@@ -49,7 +51,11 @@ function ControlWeb() {
       var numJug =$('#usr').val();
       if (2<=numJug && numJug<=10){
           $("#mCP").remove();
-          ws.crearPartida(numJug, nick);
+          $('#mPD').remove();
+          ws.crearPartida(nick, numJug);
+          /*rest.obtenerListaPartidas();
+          rest.obtenerDatosPartida();
+          iu.mostrarDatosPartida();*/
       }
       else{
           $("#mCP").remove();
@@ -68,16 +74,16 @@ function ControlWeb() {
   
   */
   this.mostrarPartidasDisponibles=function(lista){
-    $('mPD').remove();
+    $('#mPD').remove();
     
-    var cadena= '<div id="mPD"><lab for="usr">Lista de Partidas:</label>';
-    cadena+= '<id="mLP"><div class="list-group">'
+    var cadena= '<div id="mPD"><label for="usr">Lista de Partidas:</label>';
+    cadena+= '<div class="list-group">'
 
     for(i=0;i<lista.length;i++){
         var codigo=lista[i].codigo;
-        cadena += '<a href="#" class="list-group-item list-group-item-action">+codigo+</a>'
+        cadena += '<a href="#" class="list-group-item list-group-item-action">'+codigo+'</a>'
     }
-    cadena += '</div>';
+    cadena += ' </div> </div>';
 
     $("#listaPartidas").append(cadena)
 
@@ -105,10 +111,11 @@ this.quitarEsperando=function(){
 
 };
 
-this.mostrarHome=function(data){
+this.mostrarHome=function(data){  
     iu.mostrarControl();
     //iu.mostrarCrearPartida();
-    iu.mostrarPartidasDisponibles(data);
+    rest.obtenerListaPartidas();
+    //iu.mostrarPartidasDisponibles(data);
 };
 
 this.unirPartidaPrivada=function(){
@@ -122,7 +129,7 @@ this.mostrarControl=function(){
     cadena += '<p><button type="button" id="btnAbandonar" class="btn btn-primary">Abandonar partida</button>'
     cadena += '<p><button type="button" id="btnCerrar" class="btn btn-primary">Cerrar Sesion</button>'
     }
-    cadena += '</div>'
+    cadena += '</div>';
 
     $('#control').append(cadena);
     $("#btnAbandonar").on("click",function(){
@@ -182,4 +189,9 @@ this.mostrarControl=function(){
     cadena += '</div>';
     $('#mostrarRegistro').append(cadena);
   };
+  this.mostrarDatosPartida=function(){
+    var cadena = "<div> Partida: " + ws.nick.codigo;
+    cadena += '</div>';
+    $('#datosPartida').append(cadena);
+  }
 }

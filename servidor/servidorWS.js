@@ -31,7 +31,7 @@ function ServidorWS() {
             res.codigo = jugador.codigoPartida;
             socket.join(res.codigo);
             cli.enviarAlRemitente(socket, "partidaCreada", res);
-            var lista=juego.obtenerPartidasDisponibles();
+            var lista=juego.obtenerTodasPartidasDisponibles();
 						cli.enviarGlobal(socket,"nuevaPartida",lista);
           } else {
             cli.enviarAlRemitente(
@@ -149,6 +149,7 @@ function ServidorWS() {
 					jugador.cerrarSesion();
 					cli.enviarAlRemitente(socket,"usuarioEliminado",{});
 				}
+        socket.leave(codigo);
 			});
     });
   };

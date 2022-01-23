@@ -35,7 +35,7 @@ passport.use(
   new LocalStrategy(
     { usernameField: "email", passwordField: "clave" },
     function (email, clave, done) {
-      juego.loginUsuario(email.clave, function (err, user) {
+      juego.loginUsuario(email, clave, function (err, user) {
         if (err) {
           return done(err);
         } else {
@@ -118,18 +118,17 @@ app.post('/registrarUsuario',function(request,response){
 });
 //login
 /*
-app.post("/loginUsuario",passport.authenticate("local", {
-    failureRedirect: "/fallo",
-    successRedirect: "/ok",
-  })
-);
-*/
 app.post('/loginUsuario',function(request,response){
 	var email=request.body.email;
 	var clave=request.body.clave;
 	juego.registrarUsuario(email,clave,function(data){
 		response.send(data);
 	})
+});*/
+
+app.post("/loginUsuario",passport.authenticate("local", {failureRedirect: "/fallo",successRedirect: "/ok",}));
+app.get("/ok", haIniciado, function (request, response) {
+  response.send({ nick: request.user.nick });
 });
 
 //Crear partida
@@ -161,9 +160,7 @@ app.get("/unirAPartida/:nick/:codigo", function (request, response) {
   }
   //response.send(res);
 });
-app.get("/ok", haIniciado, function (request, response) {
-  response.send({ nick: request.user.nick });
-});
+
 app.get("/confirmarUsuario/:direccion/:key", function (request, response) {
   var email = request.params.direccion;
   var key = request.params.key;
@@ -206,7 +203,16 @@ app.get("/obtenerResultados/:nick",function(request,response){
 	
 	}
 });
-
+//Prueba**********
+app.get("/obtenerDatosPartida/:codigo",function(request,response){
+  var codigo = request.params.codigo;
+  var partida;
+  if (codigo){
+    partida = juego.partidas[codigo];
+    //response.send(codigo);
+    response.send(partida);
+  }
+})
 app.get("/cerrarSesion/:nick",function(request,response){
 	var nick=request.params.nick;
 	var ju1=juego.usuarios[nick];

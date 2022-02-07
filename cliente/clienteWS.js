@@ -13,7 +13,7 @@ function ClienteWS() {
     this.nick = nick;
     this.socket.emit("crearPartida", nick, num);
   };
-  this.unirAPartida = function (nick, codigo) {
+  this.unirAPartida = function (codigo, nick) {
     this.nick = nick;
     this.socket.emit("unirAPartida", nick, codigo);
   };
@@ -44,14 +44,20 @@ this.cerrarSesion=function(){
     //Entrada para la respuesta del WS
     this.socket.on("partidaCreada", function (data) {
       console.log(data);
+      console.log("Partida Creada CW47 " + data.codigo);      
       cli.codigo = data.codigo;
+      
     });
     this.socket.on("unidoAPartida", function (data) {
       console.log(data);
       cli.codigo = data.codigo;
+      console.log("Me he unido a la partida" + cli.codigo);
+      
+      
     });
     this.socket.on("nuevaPartida", function(data){
       if(!cli.codigo && cli.nick){
+        console.log("nuevaPartida CW56" + data);
           iu.mostrarPartidasDisponibles(data);
       }
     });

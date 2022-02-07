@@ -156,6 +156,7 @@ app.get("/unirAPartida/:nick/:codigo", function (request, response) {
     console.log(
       "El jugador " + nick + " se ha unido a la partida con codigo: " + codigo
     );
+    console.log("Estoy en Index.js 159");
     //res.codigo = jugador.codigoPartida;
   }
   //response.send(res);

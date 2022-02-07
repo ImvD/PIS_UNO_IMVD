@@ -58,7 +58,7 @@ function ServidorWS() {
             cli.enviarAlRemitente(socket, "unidoAPartida", res);
             if (partida.fase.nombre == "jugando") {
               cli.enviarATodos(io, codigo, "pedirCartas", {});
-              var lista=obtenerPartidasDisponibles();
+              var lista= juego.obtenerTodasPartidasDisponibles();
 							cli.enviarATodos(io,"nuevaPartida",lista)
               console.log("La partida está en fase jugando");
             }

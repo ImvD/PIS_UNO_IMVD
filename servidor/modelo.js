@@ -175,7 +175,8 @@ function Jugador(nick, juego) {
   };
   this.manoInicial = function () {
     var partida = this.obtenerPartida(this.codigoPartida);
-    this.mano = partida.dameCartas(7);
+    this.mano.push(new Numero(0, "Verde"),new Numero(0, "Verde"))
+    //this.mano = partida.dameCartas(3);
   };
   this.robar = function (num) {
     var partida = this.obtenerPartida(this.codigoPartida);
@@ -374,7 +375,9 @@ function Partida(codigo, jugador, numJug) {
   };
   this.cartaInicial = function () {
     //cojo una carta al azar
-    this.cartaActual = this.asignarUnaCarta();
+//    this.cartaActual = this.asignarUnaCarta();
+    this.cartaActual = new Numero(0, "Verde");
+
   };
   this.cambiarDireccion = function () {
     if (this.direccion.nombre == "Derecha") {

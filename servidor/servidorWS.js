@@ -120,6 +120,10 @@ function ServidorWS() {
           var codigo = jugador.codigoPartida;
           var partida = juego.partidas[codigo];
           var nickTurno = partida.turno.nick;
+          cli.enviarATodos(io, codigo, "turno", {
+            "turno": nickTurno,
+            "cartaActual": partida.cartaActual
+          });
           cli.enviarAlRemitente(socket, "turno", {
             "turno": nickTurno,
             "cartaActual": partida.cartaActual

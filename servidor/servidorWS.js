@@ -59,7 +59,7 @@ function ServidorWS() {
             if (partida.fase.nombre == "jugando") {
               cli.enviarATodos(io, codigo, "pedirCartas", {});
               var lista= juego.obtenerTodasPartidasDisponibles();
-							cli.enviarATodos(io,"nuevaPartida",lista)
+							//cli.enviarATodos(io,"nuevaPartida",lista)
               console.log("La partida está en fase jugando");
             }
           } else {
@@ -92,17 +92,20 @@ function ServidorWS() {
           var codigo = jugador.codigoPartida;
           var partida = juego.partidas[codigo];
           var nickTurno = partida.turno.nick;
-          cli.enviarATodos(io, codigo, "turno", {
-            "turno": nickTurno,
-            "cartaActual": partida.cartaActual
-          });
+          if(jugador.mano.length ==1){
+            cli.enviarATodos(io,codigo, "ultimaCarta",{nick: jugador.nick});
+          }
           if (partida.fase.nombre == "final") {
             console.log("La partida está en fase final");
+            console.log(nickTurno);
             cli.enviarATodos(io, codigo, "final", { "ganador": nickTurno });
           }
         } else {
           cli.enviarAlRemitente(socket, "fallo", "El usuario o la partida no existen");
-        }
+        }        
+        cli.enviarATodos(io, codigo, "turno", {turno: nickTurno,
+          cartaActual: partida.cartaActual
+        });
       });
       socket.on("robarCarta", function (nick,num) {
         var jugador = juego.usuarios[nick];
@@ -132,23 +135,22 @@ function ServidorWS() {
           cli.enviarAlRemitente(socket, "fallo", "El usuario o la partida no existen");
         }
       });
-      socket.on("abandonarPartida",function(){
-				var jugador=juego.usuarios[nick];
-				if (jugador){
-					jugador.abandonarPartida();
-					var codigo=jugador.codigoPartida;
-					cli.enviarATodos(io,codigo,"jugadorAbandona",{});
+      socket.on("abandonarPartida",function(nick){
+				var jugador=juego.usuarios[nick];        
+				var codigo=jugador.codigoPartida;
+        var partida = juego.partidas[codigo];
+        var nickT = partida.turno.nick;
 
-				}
+        cli.enviarATodos(io, codigo, "abandonarPartida",{nick: nickT});
 			});
-			socket.on("cerrarSesion",function(){
+			socket.on("cerrarSesion",function(nick){
 				var jugador=juego.usuarios[nick];
 				if (jugador){
 					var codigo=jugador.codigoPartida;
 					var partida=juego.partidas[codigo];
 					if (partida){
 						jugador.abandonarPartida();
-						cli.enviarATodosMenosRemitente(socket, jugador.nick,"jugadorAbandona",{});
+						cli.enviarATodosMenosRemitente(socket, jugador.nick,"abandonarPartida",{});
 					}
 					jugador.cerrarSesion();
 					cli.enviarAlRemitente(socket,"usuarioEliminado",{});

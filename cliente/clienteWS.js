@@ -63,6 +63,8 @@ this.cerrarSesion=function(){
     });
     this.socket.on("pedirCartas", function (data) {
       cli.manoInicial();
+      iu.limpiar();
+      iu.mostrarPartida({ nick: cli.nick, codigo: cli.codigo});
     });
     this.socket.on("mano", function (data) {
       console.log("mano Inicial");
@@ -74,6 +76,7 @@ this.cerrarSesion=function(){
       console.log("turno");
       console.log(data);
       iu.mostrarCartaActual(data.cartaActual);
+      iu.mostrarTurno(data.turno);
     });
     this.socket.on("final", function (data) {
       if(data.ganador == cli.nick){
@@ -82,26 +85,35 @@ this.cerrarSesion=function(){
     else{
         iu.mostrarModal("Perdedor")
     }
-     
+      iu.limpiar();
+      ws.abandonarPartida();
       console.log(data);
     });
+    this.socket.on("ultimaCarta", function (data) {
+			console.log(data);
+			iu.mostrarAlertaUno(data.nick);
+		});
     this.socket.on("fallo", function (data) {
       console.log(data);
     });
-    this.socket.on("jugadorAbandona",function(){
-      iu.mostrarModal("Un Jugador abandona la partida");
-      iu.limpiar();
-      iu.mostrarHome({nick:cli.nick});
-      cli.codigo="";
-    });
-  this.socket.on("usuarioEliminado",function(){
+    this.socket.on("usuarioEliminado",function(){
       cli.nick="";
       cli.codigo="";
       $.removeCookie("nick");
       iu.limpiar();
       iu.mostrarAgregarJugador();
     });
+  this.socket.on("abandonarPartida", function (data) {
+    if (cli.codigo) { 
+      cli.codigo = "";
+      //ws.abandonarPartida();
+      iu.limpiar();
+      iu.mostrarHome();
+      iu.mostrarModal("El jugador " + data.nick + " ha abandonado la partida.");
+    }
+  });
 
   };
+
   this.conectar();
 }

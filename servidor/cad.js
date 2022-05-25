@@ -98,10 +98,10 @@ function CAD() {
     );
   }
   this.eliminarUsuario = function (uid, callback) {
-    eliminar(this.usuariosCol, { _id: ObjectID(uid) }, callback);
+    eliminar(this.usuariosCol, {_id:ObjectID(uid)}, callback);
   };
 
-  function eliminar(coleccion, criterio, callback) {
+  this.eliminar = function (coleccion, criterio, callback) {
     coleccion.deleteOne(criterio, function (err, result) {
       if (!err) {
         console.log("Elemento eliminado");

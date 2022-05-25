@@ -56,7 +56,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
-
+//Comprueba el inicio de sesión
 const haIniciado=function(request,response,next){
 	if (request.user){
 		next();
@@ -127,6 +127,16 @@ app.post('/loginUsuario',function(request,response){
 });*/
 
 app.post("/loginUsuario",passport.authenticate("local", {failureRedirect: "/fallo",successRedirect: "/ok",}));
+
+app.delete("/eliminarUsuario/:nick", haIniciado, function(request, response){
+  var nick = request.params.nick;
+  //var ju1 //= juego.usuarios[nick]; //.obtenerUsuarioNick(nick); hay que implementarlo aun
+  var clave = request.body.clave;
+  juego.eliminarUsuario(nick, clave, function(result){
+      response.send(result);
+  });
+})
+
 app.get("/ok", haIniciado, function (request, response) {
   response.send({ nick: request.user.nick });
 });
@@ -151,15 +161,12 @@ app.get("/unirAPartida/:nick/:codigo", function (request, response) {
   var jugador = juego.usuarios[nick];
   var res = { codigo: -1 };
   //var res = juego.partidas[codigo];
-  if (jugador) {
-    var partida = jugador.unirAPartida(codigo);
-    console.log(
-      "El jugador " + nick + " se ha unido a la partida con codigo: " + codigo
-    );
-    console.log("Estoy en Index.js 159");
-    //res.codigo = jugador.codigoPartida;
+  if (juego.partidas[codigo] && jugador) {
+    jugador.unirAPartida(codigo);
+    console.log("El jugador " + nick + " se ha unido a la partida con codigo: " +codigo);
+    res.codigo = 500;
   }
-  //response.send(res);
+  response.send(res);
 });
 
 app.get("/confirmarUsuario/:direccion/:key", function (request, response) {
@@ -167,8 +174,7 @@ app.get("/confirmarUsuario/:direccion/:key", function (request, response) {
   var key = request.params.key;
   
   juego.confirmarUsuario(email,key,function(data){
-    //Comprobar data y si ha ido bien le mando al login
-    response.send(data);
+    response.redirect("/");
   });
  });
 
@@ -187,7 +193,7 @@ app.get("/obtenerListaPartidasDisponibles", function (request, response) {
     response.send(lista);
   }
 });
-app.get("/obtenerTodosResultados",function(request,response){
+app.get("/obtenerTodosResultados",haIniciado,function(request,response){
 	if (juego){
 			juego.obtenerTodosResultados(function(lista){
 			response.send(lista)
@@ -204,6 +210,33 @@ app.get("/obtenerResultados/:nick",function(request,response){
 	
 	}
 });
+//jugar carta
+app.get("/jugarCarta/:nick/:numero", function (request, response) {
+  var nick = request.params.nick;
+  var numeroCarta = request.params.numero;
+  var jugador = juego.usuarios[nick];
+
+  var res ={code:-1};
+  if (jugador.mano.length!=0){
+      jugador.jugarCarta(numeroCarta);
+      res.code=500;//si funciona bien
+  }
+  response.send(res);
+})
+
+//robar cartas
+app.get("/robar/:nick/:numero", function (request, response) {
+  var nick = request.params.nick;
+  var cartasARobar = request.params.numero;
+  var jugador = juego.usuarios[nick];
+
+  var res ={code:-1};
+  if (jugador.mano){
+      jugador.robar(cartasARobar);
+      res.code=500;
+  }
+  response.send(res);
+})
 //Prueba**********
 app.get("/obtenerDatosPartida/:codigo",function(request,response){
   var codigo = request.params.codigo;

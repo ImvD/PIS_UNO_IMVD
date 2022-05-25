@@ -6,11 +6,12 @@ function ClienteRest() {
       var nick = data.nick;
       if (nick != -1) {
         $.cookie("nick",data.nick);
-        rest.obtenerListaPartidas();
-        iu.mostrarCrearPartida(nick);
+        //rest.obtenerListaPartidas();
+        //iu.mostrarCrearPartida(nick);
+        iu.limpiar();
+        iu.comprobarUsuario();
       } else {
         iu.mostrarModal("El nick: "+nick+" esta en uso");
-        iu.mostrarAgregarJugador();
       }
     });
     //Mostrar ruleta
@@ -57,6 +58,28 @@ function ClienteRest() {
         dataType:'json'
     });
   };
+  this.eliminarUsuario = function (clave) {
+    var nick = $.cookie("nick");
+    console.log("inicio de eliminacion de usuario");
+    $.ajax({
+        type: 'DELETE',
+        url: '/eliminarUsuario/'+nick,
+        data: { "clave": clave },
+        success: function (data) {
+            if (data.res == 1) {
+                $.removeCookie("nick");
+                iu.limpiar();
+                iu.mostrarInicial();
+            } else{
+                iu.limpiar();
+                iu.mostrarModal("no se pudo eliminar el usuario");
+                iu.mostrarPerfil();
+            }
+        },
+        //contentType:'application/json',
+        dataType:'json',
+    });
+}
   this.crearPartida = function (nick, njug) {
     $.getJSON("/crearPartida/" + nick + "/" + njug, function (data) {
       console.log(data);
@@ -80,6 +103,32 @@ function ClienteRest() {
       iu.mostrarPartidasDisponibles(data);
     });
   };
+  this.jugarCarta = function (nick, numero) {
+    $.getJSON("/jugarCarta/" + nick +"/"+ numero, function (data) {
+        console.log(data);
+    });
+}
+
+this.robar = function (nick, numero) {
+    $.getJSON("/robar/" + nick +"/"+ numero, function (data) {
+        console.log(data);
+    });
+}
+this.pasarTurno = function () {
+    $.getJSON("/pasarTurno", function (data) {
+        console.log(data);
+    });
+}
+this.abandonarPartida = function(nick){
+    $.getJSON("/abandonarPartida/" + nick, function (data) {
+        console.log(data);
+    });
+}
+this.cerrarSesion = function () {
+    $.getJSON("/cerrarSesion/", function (data) {
+        console.log(data);
+    });
+}
   this.obtenerTodosResultados=function(){
 		$.getJSON("/obtenerTodosResultados",function(data){
 			console.log(data);

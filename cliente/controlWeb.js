@@ -1,30 +1,163 @@
 
 function ControlWeb() {
+
+  this.nick;
+
+  this.limpiar=function(){
+    //todos los remove
+          $("#mNJ").remove();
+          $("#mUP").remove();
+          $("#btnUP").remove();
+          $("#myCarousel").remove();
+          $("#mTE").remove();
+          $("#mCP").remove();
+          $('#mPD').remove();
+          $('#mNICK').remove();      
+          $('#mLP').remove();
+          $('#cM').remove();
+          $('#mES').remove();
+          $('#mM').remove();
+          $('#mCA').remove();
+          $('#mPT').remove();
+          $('#LU').remove();
+          $('#mLU').remove();
+          $('#WelG').remove();
+          $('#mR').remove();
+          $('#mAP').remove();
+          $('#mCS').remove();
+          $('#mT').remove();
+          //$('#mM').remove();
+          //$('#mCA').remove();
+          $('mR').remove();
+};
   this.comprobarUsuario=function(){
     if ($.cookie("nick")){
+        iu.limpiar();
         ws.nick=$.cookie("nick");
         iu.mostrarHome({nick: ws.nick});
-        iu.mostrarCrearPartida(ws.nick);
     }
-    else{        
-        iu.mostrarAgregarJugador();
-        
+    else{      
+        iu.limpiar();        
+        iu.mostrarInicial();        
     }
 
   };
-  this.mostrarAgregarJugador = function () {
-        /*$("#mAJ").remove();
-        $("#mC").remove();
-    var cadena = ' <div class="form-row"><div id="mAJ"><label for="usr">Nick:</label>';
-    cadena += '<input type="text" class="form-control" id="usr" placeholder="Introduce tu nick" style="margin-bottom:10"></input>';
-    cadena += '<button type="button" id="btnAgregarJu"class="btn btn-primary" style="margin-bottom:10">Entrar</button>';
-    cadena += "</div>";
-    cadena += '<div class="alert alert-success" id="alertaBuenUsuario" style="display: none">';
-    cadena += "<strong>Success!</strong>";
-    cadena += "</div>";*/
+  this.mostrarPortada = function(){
+    var cadena = '<div id="myCarousel" class="carousel slide" data-ride="carousel">'
+    cadena = '<!-- Indicators -->'
+    cadena += '<ol class="carousel-indicators">'
+    cadena += '  <li data-target="#myCarousel" data-slide-to="0" class="active"></li>'
+    cadena += '  <li data-target="#myCarousel" data-slide-to="1"></li>'
+    cadena += '  <li data-target="#myCarousel" data-slide-to="2"></li>'
+    cadena += '</ol>'  
+    cadena += '<!-- Wrapper for slides -->'
+    cadena += '<div class="carousel-inner">'
+    cadena += '  <div class="item active">'
+    cadena += '    <center><img src="/cliente/img/Uno1.jpg" alt="Uno1" style="height:590px ;width:50%"></center>'
+    cadena += '  </div>'  /*
+    cadena += '  <div class="item active">'
+    cadena += '    <center><img src="/cliente/img/Uno2.jpg" alt="Uno1" style="height:590px ;width:50%"></center>'
+    cadena += '  </div>'
+    cadena += '  <div class="item active">'
+    cadena += '    <center><img src="/cliente/img/Uno3.jpg" alt="Uno1"style="height:590px ;width:50%"></center>'
+    cadena += '  </div>'
+    cadena += '</div>'
+    cadena += '<!-- Left and right controls -->'
+    cadena += '<a class="left carousel-control" href="#myCarousel" data-slide="prev">'
+    cadena += '  <span class="glyphicon glyphicon-chevron-left"></span>'
+    cadena += '  <span class="sr-only">Previous</span>'
+    cadena += '</a>'
+    cadena += '<a class="right carousel-control" href="#myCarousel" data-slide="next">'
+    cadena += '  <span class="glyphicon glyphicon-chevron-right"></span>'
+    cadena += '  <span class="sr-only">Next</span>'
+    cadena += '</a>'*/
+    cadena += '</div>'    
+    cadena += '<br>'    
+    cadena += '<div>'
+    cadena += '<center><button type="button" id="btnE" class="btn btn-danger" style="font-size : 25px; height:50px;width:400px">Jugar</button></center>'
+    cadena += '</div>'
 
-    var cadena = '<a href="/auth/google" class="btn btn-primary mb-2 mr-sm-2">Acceso a Google</a>';
-    $("#agregarJugador").append(cadena);
+    $("#myCarousel").append(cadena);
+    $("#btnE").on("click", function(){
+      $("#myCarousel").remove();
+      $("#btnE").remove();
+      iu.comprobarUsuario();
+    })
+  }
+  this.mostrarInicial = function(){
+    iu.mostrarLoginGoogle();
+    iu.mostrarRegistroUsuario();
+    
+  }/*
+  this.loginUsuario = function () {
+    var cadena = '<div class="sketchy" id="LU"><label for="usr"><h5></h5>Iniciar sesión:</label>';
+    cadena += '<form action="/action_page.php" class="was-validated">';
+    cadena += '<div class="form-group">';
+    cadena += '<input type="text" class="form-control" id="correo" placeholder="correo electrónico" name="uname" required>';
+    cadena += '</div>';
+    cadena += '<div class="form-group">';
+    cadena += '<input type="password" class="form-control" id="clave" placeholder="contraseña" name="pswd" required>';   
+    cadena += '</div>';
+    cadena += '<center><button type="submit" id="btnLU" class="btn btn-primary">Entrar</button></center>';
+    cadena += '</form></div>';
+
+    
+    $("#loginU").append(cadena);
+
+    $("#btnLU").on("click", function () {
+        
+        correo = $('#correo').val();
+        clave = $('#clave').val();
+        if ((correo == "") || (clave == "")) {
+            iu.mostrarModal("Introduce un correo electrónico y contraseña válidos.");
+        }
+        else {
+            iu.limpiar();
+            rest.loginUsuario(correo, clave);
+        }
+    });
+  };*/
+  this.mostrarRegistroUsuario = function () {
+    var cadena = '<center><div class="sketchy" id="mLU" ><p style="font-family:Consolas; font-size:23px">Registrate aquí</p><button type="button" id="btnLU" class="btn btn-danger" style="font-size:20px">Regístrate</button></div></center>';
+
+    $("#mostrarLoginU").append(cadena);
+
+    $("#btnLU").on("click", function () {
+        $("#RU").remove();
+        $("#mLU").remove();
+        iu.mostrarRegistro();
+    });
+  };
+  this.mostrarRegistro=function(){
+    $('#mR').remove();
+    var cadena= '<div class="sketchy" id="mR"><lab for="usr" style="font-size:20px">Email:</label>';
+    cadena += '<input type="text" class="form-control" id="usr">';
+    cadena += '<label for="usr">Contraseña:</label>';
+    cadena += '<input type="text" class="form-control" id="pass"> <br>';
+    cadena += '<center><button type="button" id="btnMR" class="btn btn-primary" style="font-size: large">Registrar</button></center>'
+    cadena += '</div>';
+    $('#mostrarRegistro').append(cadena);
+
+    $("#btnMR").on("click", function () {
+      correo = $('#usr').val();
+      clave = $('#pass').val();
+      if ((correo == "") || (clave == "")) {
+          iu.mostrarModal("Introduce un correo electrónico y contraseña válidos.");
+      }
+      else {
+          iu.limpiar();
+          rest.agregarJugador(correo);
+      }
+  });
+
+  };
+  this.mostrarLoginGoogle = function () {
+
+    var cadena =  '<div class="sketchy" id="WelG">';
+    cadena +=  '<div id="mLG"><p style="color:#69aadb; font-family:Consolas; font-size:20px">Iniciar a través de google:</p>';
+    cadena += '<a href="/auth/google" class="btn btn-primary mb-2 mr-sm-2">Acceso a Google</a>';
+    cadena +='</div></div>';
+    $("#loginGoogle").append(cadena);
 
     /*$("#btnAgregarJu").on("click", function () {
       var nick = $("#usr").val();
@@ -46,24 +179,22 @@ function ControlWeb() {
     var nick = nick;
     var cadena = '<div id="mCP"><label for="usr">Numero de Jugadores: </label>';
     cadena += '<input type="text" class="form-control" id="usr">';
+    cadena += '<br>';
     cadena += '<button type="button" id="btnCP" class="btn btn-primary">CrearPartida</button>' 
     cadena += "</div>";
     $("#crearPartida").append(cadena);
     $("#btnCP").on("click",function(){
       var numJug =$('#usr').val();
       if (2<=numJug && numJug<=10){
+          $("#mNJ").remove();
           $("#mCP").remove();
           $('#mPD').remove();
-          $('#mNICK').remove();
-          //iu.mostrarDatosPartida(data);      
+          $('#mNICK').remove();          
+          $("#mUP").remove();    
           iu.mostrarControl();
-          iu.mostrarEsperando();    
+          iu.mostrarEsperando();            
+          rest.obtenerListaPartidas();
           ws.crearPartida(nick, numJug);
-          
-          
-          /*rest.obtenerListaPartidas();
-          rest.obtenerDatosPartida();
-          iu.mostrarDatosPartida();*/
       }
       else{
           $("#mCP").remove();
@@ -73,16 +204,31 @@ function ControlWeb() {
     })
   };
   
-  this.mostrarListaPartidas = function(){
-    //$("#crearPartida").append(cadena);
-    
+  this.mostrarListaPartidas = function(){    
   }
 
   this.mostrarUnirAPartida= function(){
+    var cadena = '<div id="mUP"><h5 id="texto2">Unir a partida</h5>';
+        cadena +=  '<div id="mUP"><label for="code">Introduzca el código de la partida:</label></div>';
+        cadena +=  '<div class="input-group mb-3"><input type="text" class="form-control" id="code"></input>';
+        cadena +=  '<div class="input-group-append"><button type="button" id="btnUP" class="btn btn-primary">Unir</button></div>';
+        cadena +=  '</div></div>';
 
+        $("#unirAPartida").append(cadena);
 
-
-    $("#unirPartida").append(cadena);
+        $("#btnUP").on("click", function () {
+            //click en mostrarPartida
+            var codigo = $('#code').val();
+            console.log(codigo);
+            if (codigo == "") {
+                iu.mostrarModal('Necesita introducir el codigo de la partida');
+            }
+            else {
+                ws.unirAPartida(codigo, ws.nick);
+                iu.limpiar();
+                iu.mostrarEsperando();
+            }
+        });
   }
   
   
@@ -97,7 +243,7 @@ function ControlWeb() {
         var partida = lista[i];
         cadena += '<a href="#" class="list-group-item list-group-item-action" value="'+codigo+ '">'+codigo+'</a>'
     }
-    cadena += ' </div> </div>';
+    cadena += ' </div> </div> <br>';
 
     $("#listaPartidas").append(cadena)
 
@@ -115,17 +261,7 @@ function ControlWeb() {
     });
 
 };
-  this.limpiar=function(){
-    //todos los remove
-          $("#mCP").remove();
-          $('#mPD').remove();
-          $('#mNICK').remove();      
-          $('#mLP').remove();
-          $('#cM').remove()
-          //$('#mM').remove();
-          //$('#mCA').remove();
-          $('mR').remove();
-};
+  
 
 this.mostrarEsperando=function(){
   $('#mES').remove();
@@ -139,39 +275,60 @@ this.quitarEsperando=function(){
 
 };
 
-this.mostrarHome=function(data){  
-    iu.mostrarControl();
-    //iu.mostrarCrearPartida();
+this.mostrarHome=function(data){
     rest.obtenerListaPartidas();
-    //iu.mostrarPartidasDisponibles(data);
+    iu.mostrarControl();    
+    iu.mostrarCrearPartida(ws.nick);    
+    iu.mostrarUnirAPartida();    
+    iu.mostrarCerrarSesion();
 };
 
+this.mostrarPartida = function (data) {
+  iu.mostrarAbandonarPartida();
+  iu.mostrarRobarCarta();
+  iu.mostrarPasarTurno();
+  iu.mostrarControl();
+  iu.mostrarCartaActual();
+  iu.mostrarMano();
+};
 this.unirPartidaPrivada=function(){
 
 };
 
 this.mostrarControl=function(){
     $('#mNICK').remove();
-    var cadena='<div id="mNICK" > Nick: '+ws.nick;
-    if (ws.codigo){
-    cadena += '<p><button type="button" id="btnAbandonar" class="btn btn-primary">Abandonar partida</button></p>'
-    cadena += '<p><button type="button" id="btnCerrar" class="btn btn-primary">Cerrar Sesion</button></p>'
-    }
-    cadena += "</div>";
+    var cadena='<div id="mNJ" class="sketchy">';
+    cadena+='<div id="mNICK" ><center>'+ws.nick+'</center></div>';
+    cadena += "</div></div>";
     $('#control').append(cadena);
+};
+this.mostrarAbandonarPartida = function(){
+    var cadena ='<div id="mAP"><button type="button" id="btnAbandonar" class="btn btn-danger" >Abandonar partida</button></div>';
+
+    $("#abandonarP").append(cadena);
+
     $("#btnAbandonar").on("click",function(){
-        ws.abandonarPartida();
-    });
+      ws.codigo = "";
+      ws.abandonarPartida();
+      iu.limpiar();
+      iu.mostrarControl();
+      iu.mostrarModal("Has abandonado la partida y cerrado la sala.")
+  });
+};
+  this.mostrarCerrarSesion = function(){
+    var cadena = '<div id="mCS"><button type="button" id="btnCerrar" class="btn btn-danger">Cerrar Sesion</button></div>';
+
+    $("#cerrarS").append(cadena);
 
     $("#btnCerrar").on("click",function(){
-        // ws.nick="";
-        // ws.codigo="";
-        // iu.limpiar();
-        // iu.mostrarAgregarJugador();
-        ws.cerrarSesion();
-    });
-
-  }
+      ws.nick="";
+      ws.codigo="";
+      //iu.limpiar();
+      iu.mostrarPortada();
+      $.removeCookie("nick");
+      //ws.cerrarSesion();        
+ });
+  };
 
   this.mostrarModal=function(msg){
     //meter el mensaje del modal
@@ -180,42 +337,78 @@ this.mostrarControl=function(){
     $('#contenidoModal').append(cadena);
     $('#miModal').modal('show');
   };
+  this.mostrarPasarTurno = function () {
+    var cadena = '<div id="mPT"><button type="button" id="btnPT" class="btn btn-warning">Pasar turno</button></div>';
 
+    $("#pasarTurno").append(cadena);
+
+    $("#btnPT").on("click", function () {
+        ws.pasarTurno();
+    })
+
+  };
   this.mostrarMano=function(lista){
     $('#mM').remove();
-    var cadena = '<div id="mM" class="card-columns">';
+    var cadena = '<div class="list-group" id="mM">';
+        cadena += '<div class="card-columns">';
     for(i=0;i<lista.length;i++){
-        cadena+='<div class="card bg-light">';
+        cadena+='<div class="card bg-light" style="width:200px">';
         cadena+='<div class="card-body text-center">';
+        cadena+='<a href="#" value="'+ i +'" class="list-group-item list-group-item-action">';
         cadena+='<img class="card-img-top" src="cliente/img/'+lista[i].nombre+'.png" alt="Card image">';
-        cadena+='<p class="card-text">'+lista[i].tipo+' '+lista[i].valor+' '+lista[i].color+'</p>';
+        cadena+='</a> <p class="card-text">'+lista[i].tipo+' '+lista[i].valor+' '+lista[i].color+'</p>';
         cadena+='</div></div>';
     }
-    cadena+='</div>';
-    $('#mano').append(cadena);
+    cadena+='</div></div>';
+    $('#mMano').append(cadena);
+
+    $(".list-group a").click(function () {
+      var number=-1;
+      number = $(this).attr("value");
+      if (number!=-1) {
+          ws.jugarCarta(number);
+      }
+    })
   };
+  this.mostrarTurno = function (nickT) {
+    $("#mT").remove();
+    
+    var cadena='<div id="mNJ" class="sketchy">';
+    cadena += '<div id="mT"><h6>Turno: </h6>' + nickT +'</div> </div>';
+
+    $("#mostrarTurno").append(cadena);
+  };
+  this.mostrarAlertaUno = function (msg) {
+    $("#mAU").remove();
+    $("#mAC").remove();
+
+    var cadena = '<div id="mAU" class="alert alert-primary alert-dismissible">';
+    cadena = cadena + '<button type="button" class="close" data-dismiss="alert">&times;</button>';
+    cadena = cadena + '<strong>Al jugador ' + msg + ' le queda solo una carta! </strong></div>';
+    $("#alerta").append(cadena);
+}
   this.mostrarCartaActual=function(carta){
     $('#mCA').remove();
     var cadena = '<div id="mCA" class="card-columns">';
     cadena+='<div class="card bg-light">';
     cadena+='<div class="card-body text-center">';
-    //cadena+='<img class="card-img-top" src="cliente/img/'+lista[i].nombre+'.png" alt="Card image">';
+    cadena+='<img class="card-img-top" src="cliente/img/'+carta.nombre+'.png" alt="Card image">';
     cadena+='<p class="card-text">'+carta.tipo+' '+carta.valor+' '+carta.color+'</p>';
     cadena+='</div></div>';
     cadena+='</div>';
-    $('#actual').append(cadena);
+    $('#cActual').append(cadena);
   };
+  this.mostrarRobarCarta = function () {
+    var cadena = '<div id="mRC"><button type="button" id="btnRC" class="btn btn-danger">Robar</button>';
 
-  this.mostrarRegistro=function(){
-    $('#mR').remove();
-    var cadena= '<div id="mR"><lab for="usr">Email:</label>';
-    cadena += '<input type="text" class="form-control" id="usr">';
-    cadena += '<label for="usr">Contraseña</label>';
-    cadena += '<input type="text" class="form-control" id="usr">';
-    cadena += '<button type="button" id="btnMR" class="btn btn-primary">Registrar</button>'
-    cadena += '</div>';
-    $('#mostrarRegistro').append(cadena);
-  };
+    $("#robarCarta").append(cadena);
+
+    $("#btnRC").on("click", function () {
+        ws.robarCarta(1);
+    })
+
+};
+ 
   this.mostrarDatosPartida=function(partida){
     $('#mDP').remove();
     $('#mPD').remove();

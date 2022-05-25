@@ -175,8 +175,8 @@ function Jugador(nick, juego) {
   };
   this.manoInicial = function () {
     var partida = this.obtenerPartida(this.codigoPartida);
-    this.mano.push(new Numero(0, "Verde"),new Numero(0, "Verde"))
-    //this.mano = partida.dameCartas(3);
+    //this.mano.push(new Numero(0, "Verde"),new Numero(0, "Verde"))
+    this.mano = partida.dameCartas(6);
   };
   this.robar = function (num) {
     var partida = this.obtenerPartida(this.codigoPartida);
@@ -327,7 +327,8 @@ function Partida(codigo, jugador, numJug) {
     }
   };
   this.asignarTurno = function () {
-    var nick = this.ordenTurno[0];
+    var random = randomInt(1, Object.keys(this.jugadores).length) - 1;
+    var nick = this.ordenTurno[random];
     this.turno = this.jugadores[nick];
   };
   this.jugadorPuedeJugar = function (jugador) {
@@ -337,8 +338,17 @@ function Partida(codigo, jugador, numJug) {
     this.fase.jugarCarta(carta, nick, this);
   };
 
-  //Do it
-  this.quitarCarta = function (carta) {};
+  this.quitarCarta = function (carta) {
+    var partida = this.obtenerPartida(this.codigoPartida);
+    var indice = this.mano.indexOf(carta);
+    this.mano.splice(indice, 1);
+    if (this.mano.length <= 0) {
+        partida.finPartida();
+    }
+  };
+  this.eliminarUsuario = function(callback){
+    this.juego.eliminarUsuario(this._id, callback);
+  }
   this.puedeJugarCarta = function (carta, nick) {
     if (nick == this.turno.nick) {
       if (this.comprobarCarta(carta)) {
@@ -375,8 +385,8 @@ function Partida(codigo, jugador, numJug) {
   };
   this.cartaInicial = function () {
     //cojo una carta al azar
-//    this.cartaActual = this.asignarUnaCarta();
-    this.cartaActual = new Numero(0, "Verde");
+   this.cartaActual = this.asignarUnaCarta();
+   // this.cartaActual = new Numero(0, "Verde");
 
   };
   this.cambiarDireccion = function () {
@@ -509,7 +519,7 @@ function Numero(valor, color) {
   this.tipo = "numero";
   this.color = color;
   this.valor = valor;
-  this.nombre = "numero"+valor;
+  this.nombre = color+valor;
   this.comprobarEfecto = function (partida) {
     console.log("No hay efecto");
   };
@@ -519,7 +529,7 @@ function Bloqueo(valor, color) {
   this.tipo = "bloqueo";
   this.color = color;
   this.valor = valor;
-  this.nombre = "bloqueo"+valor;
+  this.nombre = color+"bloqueo";
   this.comprobarEfecto = function (partida) {
     partida.bloquearSiguiente();
   };
@@ -529,7 +539,7 @@ function Cambio(valor, color) {
   this.tipo = "cambio";
   this.color = color;
   this.valor = valor;
-  this.nombre = "cambio"+valor;
+  this.nombre = color+"cambio";
   this.comprobarEfecto = function (partida) {
     partida.cambiarDireccion();
   };
@@ -539,7 +549,7 @@ function Mas2(valor, color) {
   this.tipo = "mas2";
   this.color = color;
   this.valor = valor;
-  this.nombre = "mas2"+valor;
+  this.nombre = color+"mas2";
   this.comprobarEfecto = function (partida) {};
 }
 //Mas4(Chupate)

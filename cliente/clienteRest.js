@@ -10,6 +10,7 @@ function ClienteRest() {
         //iu.mostrarCrearPartida(nick);
         iu.limpiar();
         iu.comprobarUsuario();
+        rest.obtenerListaPartidas();
       } else {
         iu.mostrarModal("El nick: "+nick+" esta en uso");
       }
@@ -27,7 +28,8 @@ function ClienteRest() {
                 //mostrarLogin
                 console.log(data.email);
                 ws.nick=data.nick;
-                rest.obtenerListaPartidas();
+                //Llamo al login
+                //rest.obtenerListaPartidas();
             }
             else{
                 console.log("No se ha podido registrar")
@@ -41,11 +43,12 @@ function ClienteRest() {
   this.loginUsuario=function(email,clave){
     $.ajax({
         type:'POST',
-        url:'/registrarUsuario',
+        url:'/loginUsuario',
         data:{"email":email,"clave":clave},
         success:function(data){
             if (data.email!="nook"){
                 //mostrarLogin
+                //Guardar la cookie del nick
                 console.log(data.email);
                 ws.nick=data.nick;
                 rest.obtenerListaPartidas();

@@ -1,5 +1,5 @@
 var cad = require("./cad.js");
-var cf = "./cifrado.js";
+var cf = require("./cifrado.js");
 //var moduloEmail = require("./email.js"); //Guardo los métodos para autentificarme con Sengrit(Credenciales) y enviarlo
 
 function Juego(test) {
@@ -286,10 +286,10 @@ function Partida(codigo, jugador, numJug) {
       this.mazo.push(new Bloqueo(20, colores[i]));
       this.mazo.push(new Bloqueo(20, colores[i]));
 
-      /* 
+       
             this.mazo.push(new Mas2(20,colores[i]));
             this.mazo.push(new Mas2(20,colores[i]));
-        
+      /*  
         for (i=1;i<5;i++){
             this.mazo.push(new Comodin(20));
             this.mazo.push(new Comodin4(20));
@@ -379,6 +379,9 @@ function Partida(codigo, jugador, numJug) {
           this.cartaActual.tipo == carta.tipo)) ||
       (this.cartaActual.tipo == "bloqueo" &&
         (this.cartaActual.color == carta.color ||
+          this.cartaActual.tipo == carta.tipo)) ||
+      (this.cartaActual.tipo == "mas2" &&
+        (this.cartaActual.color == carta.color ||
           this.cartaActual.tipo == carta.tipo))
     );
     //||this.cartaActual.tipo=="bloqueo" && (this.cartaActual.color==carta.color ||this.cartaActual.tipo==carta.tipo )
@@ -389,12 +392,12 @@ function Partida(codigo, jugador, numJug) {
    // this.cartaActual = new Numero(0, "Verde");
 
   };
-  this.cambiarDireccion = function () {
-    if (this.direccion.nombre == "Derecha") {
-      this.direccion = new Izquierda();
-    } else {
-      this.direccion = new Derecha();
-    }
+  this.cambiarDireccion = function () {  
+      if (this.direccion.nombre == "Derecha") {
+        this.direccion = new Izquierda();
+      } else {
+        this.direccion = new Derecha();
+      }    
   };
   this.finPartida = function () {
     this.fase = new Final();
@@ -541,7 +544,11 @@ function Cambio(valor, color) {
   this.valor = valor;
   this.nombre = color+"cambio";
   this.comprobarEfecto = function (partida) {
-    partida.cambiarDireccion();
+    if(partida.numeroJugadores() == 2){
+      partida.bloquearSiguiente();
+    }else{
+      partida.cambiarDireccion();
+    }
   };
 }
 //Mas2(Chupate)
@@ -550,7 +557,13 @@ function Mas2(valor, color) {
   this.color = color;
   this.valor = valor;
   this.nombre = color+"mas2";
-  this.comprobarEfecto = function (partida) {};
+  this.comprobarEfecto = function (partida) {
+    var jug = partida.direccion.obtenerSiguiente(partida);
+    var chupadas = partida.dameCartas(2);
+    jug.mano = jug.mano.concat(chupadas);
+    //jug.robar(2);
+    console.log("El jugador " + jug.nick + " se chupa 2 cartas");
+  };
 }
 //Mas4(Chupate)
 function Mas4(valor) {

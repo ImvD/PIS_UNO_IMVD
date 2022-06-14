@@ -35,6 +35,9 @@ function ClienteWS() {
 this.cerrarSesion=function(){
     this.socket.emit("cerrarSesion",this.nick);
 }
+this.datosPartida=function(){
+  this.socket.emit("datosPartida",this.codigo);
+}
   //Servidor WS del cliente
   this.servidorWSCliente = function () {
     var cli = this;
@@ -96,24 +99,27 @@ this.cerrarSesion=function(){
     this.socket.on("fallo", function (data) {
       console.log(data);
     });
-    this.socket.on("usuarioEliminado",function(){
-      cli.nick="";
-      cli.codigo="";
-      $.removeCookie("nick");
-      iu.limpiar();
-      iu.mostrarAgregarJugador();
+    this.socket.on("usuarioEliminado",function(data){
+      if(cli.nick){        
+        $.removeCookie("nick");
+        cli.nick="";
+        cli.codigo="";
+        iu.comprobarUsuario();        
+        iu.mostrarModal("El jugador " + data.nick + " ha cerrado sesión.");
+      }      
     });
   this.socket.on("abandonarPartida", function (data) {
     if (cli.codigo) { 
       cli.codigo = "";
-      //ws.abandonarPartida();
       iu.limpiar();
       iu.mostrarHome();
       iu.mostrarModal("El jugador " + data.nick + " ha abandonado la partida.");
     }
   });
-
+  this.socket.on("datosPartida",function(data){
+    console.log(data);
+    iu.datosPartida({codigo:data.codigo, propietario: data.propietario, numJug:data.numjug })
+  })
   };
-
   this.conectar();
 }

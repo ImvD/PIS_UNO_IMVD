@@ -10,6 +10,7 @@ header h1 {
 section {
     margin: 0 1rem;
 }
+
 .card {
     background-color: #fff;
     padding: 1rem;
@@ -242,6 +243,19 @@ section {
     font-family: Consolas;
 }
 #mNJ{
+    font-size: 100%;
+    size: 500px;
+    padding: 0.5rem;
+    display: inline-block;
+    border: 3px solid #333333;
+    font-size: large;
+    border-radius: 2% 6% 5% 4% / 1% 1% 2% 4%;
+    text-transform: uppercase;
+    letter-spacing: 0.3ch;
+    background: #ffffff;
+    position: relative;
+}
+#mmT{
     font-size: 100%;
     size: 500px;
     padding: 0.5rem;

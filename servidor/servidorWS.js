@@ -143,17 +143,26 @@ function ServidorWS() {
 
         cli.enviarATodos(io, codigo, "abandonarPartida",{nick: nickT});
 			});
+      socket.on("datosPartida",function(codigo){        
+        console.log("Estoy en los datos de la partida");
+        var partida =juego.partidas[codigo];
+        var prop = partida.propietario;
+        var njug = partida.numeroJugadores();
+
+        cli.enviarAlRemitente(socket,"datosPartida",{"codigo":codigo,"propietario":prop,"numjug":njug})
+      });
 			socket.on("cerrarSesion",function(nick){
 				var jugador=juego.usuarios[nick];
 				if (jugador){
 					var codigo=jugador.codigoPartida;
 					var partida=juego.partidas[codigo];
+          /*
 					if (partida){
 						jugador.abandonarPartida();
 						cli.enviarATodosMenosRemitente(socket, jugador.nick,"abandonarPartida",{});
-					}
+					}*/
 					jugador.cerrarSesion();
-					cli.enviarAlRemitente(socket,"usuarioEliminado",{});
+					cli.enviarAlRemitente(socket,"usuarioEliminado",{nick: jugador.nick});
 				}
         socket.leave(codigo);
 			});

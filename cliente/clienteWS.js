@@ -37,7 +37,10 @@ this.cerrarSesion=function(){
 }
 this.datosPartida=function(){
   this.socket.emit("datosPartida",this.codigo);
-}
+};
+this.jugadoresPartida=function(){
+  this.socket.emit("jugadoresPartida",this.codigo);
+};
   //Servidor WS del cliente
   this.servidorWSCliente = function () {
     var cli = this;
@@ -116,10 +119,16 @@ this.datosPartida=function(){
       iu.mostrarModal("El jugador " + data.nick + " ha abandonado la partida.");
     }
   });
-  this.socket.on("datosPartida",function(data){
+  this.socket.on("mdatosPartida",function(data){
+    console.log("Vuelvo de Mostrar Datos del servidor")
     console.log(data);
-    iu.datosPartida({codigo:data.codigo, propietario: data.propietario, numJug:data.numjug })
-  })
+    iu.datosPartida(data);
+  });
+  this.socket.on("jugadoresPartida",function(data){
+    console.log("Vuelvo de Mostrar Jugadores del servidor")
+    console.log(data);
+    iu.jugadoresPartida(data);
+  });
   };
   this.conectar();
 }

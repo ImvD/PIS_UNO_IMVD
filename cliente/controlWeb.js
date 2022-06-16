@@ -28,6 +28,11 @@ function ControlWeb() {
           $('#mmT').remove();
           $('#mRC').remove();
           $('#mDP').remove();
+          $('#WdP').remove();
+          $('#btndV').remove();
+          $('#btnS').remove();
+          $('#WjP').remove();
+          $('#btnjV').remove();
           //$('#mM').remove();
           //$('#mCA').remove();
           $('mR').remove();
@@ -87,11 +92,18 @@ function ControlWeb() {
       iu.comprobarUsuario();
     })
   }
-  this.mostrarInicial = function(){
-    iu.mostrarLoginGoogle();
+  this.mostrarInicial = function(){    
     iu.mostrarRegistroUsuario();
+    iu.mostrarLoginGoogle();
+    iu.mostrarLoginUsuario();
     
-  }/*
+  }
+  this.mostrarInicialSR = function(){  
+    iu.mostrarLoginGoogle();
+    iu.mostrarLoginUsuario();
+    
+  }
+  /*
   this.loginUsuario = function () {
     var cadena = '<div class="sketchy" id="LU"><label for="usr"><h5></h5>Iniciar sesión:</label>';
     cadena += '<form action="/action_page.php" class="was-validated">';
@@ -121,13 +133,13 @@ function ControlWeb() {
     });
   };*/
   this.mostrarRegistroUsuario = function () {
-    var cadena = '<center><div class="sketchy" id="mLU" ><p style="font-family:Consolas; font-size:23px">Registrate aquí</p><button type="button" id="btnLU" class="btn btn-danger" style="font-size:20px">Regístrate</button></div></center>';
+    var cadena = '<center><div class="sketchy" id="mRU" ><p style="font-family:Consolas; font-size:23px">¿Eres nuevo?</p><button type="button" id="btnRU" class="btn btn-danger" style="font-size:20px">Regístrate</button></div></center>';
 
-    $("#mostrarLoginU").append(cadena);
+    $("#mostrarRegistrarU").append(cadena);
 
-    $("#btnLU").on("click", function () {
-        $("#RU").remove();
+    $("#btnRU").on("click", function () {
         $("#mLU").remove();
+        $("#mRU").remove();
         iu.mostrarRegistro();
     });
   };
@@ -148,14 +160,50 @@ function ControlWeb() {
     $("#btnMR").on("click", function () {
       correo = $('#usr').val();
       clave = $('#pass').val();
-      if ((correo == "") || (clave == "")) {
-        alert('El usuario o la contraseña son incorrectos') ;
-        //iu.mostrarModal("Introduce un correo electrónico y contraseña válidos.");
+      if ((correo == "") || (clave == "")) {      
+        swal("Error", "Debes de añadir un nombre de usuario y contraseña válidos", "error");
       }
       else {
           iu.limpiar();
           rest.registrarUsuario(correo,clave);
-          //rest.agregarJugador(correo);
+      }
+  });
+
+  };
+  this.mostrarLoginUsuario = function () {
+    var cadena = '<center><div class="sketchy" id="mLU" ><p style="font-family:Consolas; font-size:23px">¿Ya tienes cuenta?</p><button type="button" id="btnLU" class="btn btn-danger" style="font-size:20px">Login</button></div></center>';
+
+    $("#mostrarLoginU").append(cadena);
+
+    $("#btnLU").on("click", function () {
+        $("#mRU").remove();
+        $("#mLU").remove();
+        iu.mostrarLogin();
+    });
+  };
+  this.mostrarLogin=function(){
+    $('#mR').remove();
+    var cadena= '<div class="sketchy" id="LU"><lab for="usr" style="font-size:20px">Email:</label>';
+    cadena += '<div class="form-group">';
+    cadena += '<input type="text" class="form-control" id="usr" placeorder="Usuario" required>';  
+    cadena += '</div>';
+    cadena += '<label for="usr">Contraseña:</label>';    
+    cadena += '<div class="form-group">';
+    cadena += '<input type="text" class="form-control" id="pass" placeorder="Contraseña" required> <br>';
+    cadena += '</div>';
+    cadena += '<center><button type="button" id="btnML" class="btn btn-primary" style="font-size: large">Login</button></center>'
+    cadena += '</div>';
+    $('#mostrarLogin').append(cadena);
+
+    $("#btnML").on("click", function () {
+      correo = $('#usr').val();
+      clave = $('#pass').val();
+      if ((correo == "") || (clave == "")) {     
+        swal("Error", "Debes de añadir un nombre de usuario y contraseña válidos", "error");
+      }
+      else {
+          iu.limpiar();
+          rest.loginUsuario(correo,clave);
       }
   });
 
@@ -168,22 +216,8 @@ function ControlWeb() {
     cadena +='</div></div>';
     $("#loginGoogle").append(cadena);
 
-    /*$("#btnAgregarJu").on("click", function () {
-      var nick = $("#usr").val();
-      //Comprobar que el nick no es vacío
-      if(nick==""){
-        iu.mostrarModal("Hay que intoducir un nick");
-      }else{
-        //document.getElementById("alertaBuenUsuario").style.display = "block";
-        //$("#alertaBuenUsuario").style.display = "block";
-        //$("#agregarJugador").append(cadena);
-        $("#mAJ").remove();
-        rest.agregarJugador(nick);
-      
-        //swal("Error", "Debes de añadir un nombre de usuario", "error");
-      }
-    });*/
   };
+
   this.mostrarCrearPartida = function (nick) {
     var nick = nick;
     var cadena = '<div id="mCP"><label for="usr">Numero de Jugadores: </label>';
@@ -202,8 +236,7 @@ function ControlWeb() {
           $("#mUP").remove();    
           iu.mostrarControl();
           iu.mostrarEsperando();
-          iu.mostrarDatosPartida();            
-          //rest.obtenerListaPartidas();
+          iu.mostrarDatosPartida();          
           ws.crearPartida(nick, numJug);
       }
       else{
@@ -267,7 +300,7 @@ function ControlWeb() {
             $('#mLP').remove();
             $('#mCP').remove();
             iu.mostrarEsperando();
-            iu.mostrarDatosPartida(partida);
+            //iu.mostrarDatosPartida(partida);
             ws.unirAPartida(codigo,nick);            
         }
     });
@@ -421,24 +454,58 @@ this.mostrarAbandonarPartida = function(){
 };
  
   this.mostrarDatosPartida=function(data){
-    $('#mDP').remove();
+    $('#btnMDP').remove();
+    var cadena =  '<div class="sketchy" id="WmdP">';
     //var codigop = partida.codigo;
-    var cadena = '<div id="mDP"><button type="button" id="btnMDP" class="btn btn-danger">Datos de Partida</button>';
+    cadena += '<div id="mDP"><button type="button" id="btnMDP"class="btn btn-danger">Datos de Partida</button>';
     //Partida: " + data.codigo;
-    cadena += "</div>";
+    cadena += "</div></div>";
 
     $('#datosPartida').append(cadena);
-    
+
     $("#btnMDP").click(function () {
       ws.datosPartida();
       })
   };
   this.datosPartida=function(data){
     $('#mDP').remove();
+    $('#WmdP').remove();
     //var codigop = partida.codigo;
-    var cadena = '<div id="mrDP"><p> A'+data.codigo+'<br>'+data.propietario+'</p>';
-    //Partida: " + data.codigo;
-    cadena += "</div>";
+    var cadena =  '<div class="sketchy" id="WdP">';
+    cadena += '<div id="mrDP" ><p> <b>Código Partida: </b> '+data.codigo+'<br> <b>Propietario: </b>'+data.propietario;
+    cadena += '<br> <b>Nº de jugadores: </b>'+data.numjug+'</p>';    
+    cadena += '</div></div><button type="button" id="btndV"class="btn btn-danger" style="margin-top: 10px;margin-right: 5px;">Volver</button>';    
+    cadena += '<button type="button" id="btnS"class="btn btn-danger"style="margin-top: 10px;margin-left: 5px;">Siguiente</button>';    
     $('#dPartida').append(cadena);
+
+    $("#btndV").click(function () {      
+    $('#WdP').remove();
+    $('#btndV').remove();
+    $('#btnS').remove();
+      iu.mostrarDatosPartida();
+      })
+    $("#btnS").click(function () {
+      ws.jugadoresPartida();
+      })
   };
+  this.jugadoresPartida=function(data){
+    $('#WdP').remove();
+    $('#btnV').remove();
+    //var codigop = partida.codigo;
+    
+    var cadena =  '<div class="sketchy" id="WjP">';
+    cadena += '<br> <b>Jugadores: </b> </p>';        
+    for(i=0;i<data.length;i++){
+    cadena += '<br><p>j1 :</p> '+data[i];
+    }
+    cadena += '</div></div><br><button type="button" id="btnjV"class="btn btn-danger">Volver</button>';       
+    $('#jPartida').append(cadena);
+
+    $("#btnjV").click(function () {
+      $('#WjP').remove();
+      $('#btnjV').remove();
+      ws.jugadoresPartida();
+      })
+  };
+
 }

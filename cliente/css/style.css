@@ -242,6 +242,21 @@ section {
 #mR{
     font-family: Consolas;
 }
+#WmdP{
+    
+    padding: 10%; 
+    font-size: 13px;    
+}
+#btnMDP{    
+    font-size: 18px;
+    width: 150px;  
+}
+#WdP, #WjP{
+    font-size: 13px;    
+    padding: 2rem 4rem;    
+    max-width: 700px;
+    width: 580px;
+}
 #mNJ{
     font-size: 100%;
     size: 500px;

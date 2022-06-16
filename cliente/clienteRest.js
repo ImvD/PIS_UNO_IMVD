@@ -22,20 +22,21 @@ function ClienteRest() {
     $.ajax({
         type:'POST',
         url:'/registrarUsuario',
-        data:{"email":email,"clave":clave},
+        data:JSON.stringify({"email":email,"clave":clave}),
         success:function(data){
             if (data.email!="nook"){
-                //mostrarLogin
-                console.log(data.email);
+                //mostrarLogin                
+                console.log("Registro exitoso, email:" + email);
                 ws.nick=data.nick;
                 //Llamo al login
+                iu.mostrarInicialSR();
                 //rest.obtenerListaPartidas();
             }
             else{
                 console.log("No se ha podido registrar")
             }
         },
-        //contentType:'application/json',
+        contentType:'application/json',
         dataType:'json'
     });
   };
@@ -44,20 +45,24 @@ function ClienteRest() {
     $.ajax({
         type:'POST',
         url:'/loginUsuario',
-        data:{"email":email,"clave":clave},
+        data:JSON.stringify({"email":email,"clave":clave}),
         success:function(data){
             if (data.email!="nook"){
                 //mostrarLogin
                 //Guardar la cookie del nick
-                console.log(data.email);
+                console.log("Inicio de sesion con éxito por parte de : " + email);
+                $.cookie("nick",data.nick);
                 ws.nick=data.nick;
-                rest.obtenerListaPartidas();
+                iu.mostrarHome();
+                //iu.comprobarUsuario();
+                //rest.obtenerListaPartidas();   
             }
             else{
-                iu.modal("Usuario o clave incorrecto")
+                iu.modal("Usuario o clave incorrecto");
+                iu.mostrarInicial();
             }
         },
-        //contentType:'application/json',
+        contentType:'application/json',
         dataType:'json'
     });
   };

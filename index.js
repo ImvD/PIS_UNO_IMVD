@@ -117,16 +117,16 @@ app.post('/registrarUsuario',function(request,response){
 	})
 });
 //login
-/*
+
 app.post('/loginUsuario',function(request,response){
 	var email=request.body.email;
 	var clave=request.body.clave;
-	juego.registrarUsuario(email,clave,function(data){
+	juego.loginUsuario(email,clave,function(data){
 		response.send(data);
 	})
-});*/
-
-app.post("/loginUsuario",passport.authenticate("local", {failureRedirect: "/fallo",successRedirect: "/ok",}));
+});
+/*
+app.post("/loginUsuario",passport.authenticate("local", {failureRedirect: "/fallo",successRedirect: "/ok",}));*/
 
 app.delete("/eliminarUsuario/:nick", haIniciado, function(request, response){
   var nick = request.params.nick;

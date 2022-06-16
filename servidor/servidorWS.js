@@ -143,13 +143,18 @@ function ServidorWS() {
 
         cli.enviarATodos(io, codigo, "abandonarPartida",{nick: nickT});
 			});
-      socket.on("datosPartida",function(codigo){        
-        console.log("Estoy en los datos de la partida");
+      socket.on("datosPartida",function(codigo){                
+        console.log("Estoy datos partida servidor");
         var partida =juego.partidas[codigo];
         var prop = partida.propietario;
         var njug = partida.numeroJugadores();
-
-        cli.enviarAlRemitente(socket,"datosPartida",{"codigo":codigo,"propietario":prop,"numjug":njug})
+        cli.enviarAlRemitente(socket,"mdatosPartida",{"codigo":codigo,"propietario":prop,"numjug":njug});
+      });
+      socket.on("jugadoresPartida",function(codigo){        
+        console.log("Estoy en los datos de la partida 1");
+        var partida =juego.partidas[codigo];
+        //var jug = partida.jugadores;
+        cli.enviarAlRemitente(socket,"jugadoresPartida",partida.jugadores);
       });
 			socket.on("cerrarSesion",function(nick){
 				var jugador=juego.usuarios[nick];

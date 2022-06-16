@@ -50,13 +50,19 @@ function Juego(test) {
     var ju = this;
     var nick = email;
     this.cad.encontrarUsuarioCriterio({ email: email }, function (usr) {
-      var clavedesCifrada = cf.decryptStr(usr.clave, "sEcrEtA");
-      if (usr && clave == clavedesCifrada && usr.confirmada) {
-        cb(usr);
-        ju.agregarJugador(usr.nick);
-        console.log("Usuario inicia sesión")
-      } else {
-        cb({ nick: "nook" });
+      if (usr) {        
+        var clavedesCifrada = cf.decryptStr(usr.clave, "sEcrEtA");
+        if(clave == clavedesCifrada && usr.confirmada){
+          cb(null,usr);
+          ju.agregarJugador(usr.nick);
+          console.log("Usuario "+usr+" inicia sesión")
+        }
+        else{
+          cb(null);
+        }
+      }
+      else {
+        cb(null);
       }
     });
   };
